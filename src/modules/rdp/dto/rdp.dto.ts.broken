@@ -1,0 +1,344 @@
+// path: backend/src/modules/rdp/dto/rdp-fixed.dto.ts
+// purpose: Fixed Data Transfer Objects for Remote Desktop Access operations
+// dependencies: class-validator, class-transformer, swagger
+
+import { IsString, IsOptional, IsBoolean, IsArray, IsEnum, IsNumber, IsObject, Min, Max } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
+
+export enum SessionType {
+  RDP = 'RDP',
+  VNC = 'VNC', 
+  SSH = 'SSH',
+  VDI = 'VDI',
+  BROWSER = 'BROWSER',
+}
+
+export enum SessionStatus {
+  CREATED = 'CREATED',
+  STARTING = 'STARTING', 
+  ACTIVE = 'ACTIVE',
+  PAUSED = 'PAUSED',
+  STOPPING = 'STOPPING',
+  STOPPED = 'STOPPED',
+  ERROR = 'ERROR',
+  EXPIRED = 'EXPIRED',
+}
+
+export enum VdiType {
+  WINDOWS = 'WINDOWS',
+  LINUX = 'LINUX',
+  MACOS = 'MACOS',
+  ANDROID = 'ANDROID',
+  CUSTOM = 'CUSTOM',
+}
+
+export enum ConnectionProtocol {
+  RDP = 'RDP',
+  VNC = 'VNC',
+  SSH = 'SSH',
+  SPICE = 'SPICE',
+  GUACAMOLE = 'GUACAMOLE',
+}
+
+export class CreateSessionDto {
+  @ApiProperty({ description: 'Session name' })
+  @IsString()
+  name: string;
+
+  @ApiPropertyOptional({ description: 'Session description' })
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @ApiProperty({ enum: SessionType, description: 'Session type' })
+  @IsEnum(SessionType)
+  type: SessionType;
+
+  @ApiProperty({ description: 'Target host or VDI instance' })
+  @IsString()
+  target: string;
+
+  @ApiPropertyOptional({ description: 'Target port' })
+  @IsOptional()
+  @IsNumber()
+  port?: number;
+
+  @ApiPropertyOptional({ description: 'Username for connection' })
+  @IsOptional()
+  @IsString()
+  username?: string;
+
+  @ApiPropertyOptional({ description: 'Password for connection' })
+  @IsOptional()
+  @IsString()
+  password?: string;
+
+  @ApiPropertyOptional({ description: 'Session duration in minutes' })
+  @IsOptional()
+  @IsNumber()
+  @Min(1)
+  @Max(1440)
+  duration?: number;
+
+  @ApiPropertyOptional({ description: 'Maximum concurrent connections' })
+  @IsOptional()
+  @IsNumber()
+  @Min(1)
+  @Max(10)
+  maxConnections?: number;
+
+  @ApiPropertyOptional({ description: 'Session settings' })
+  @IsOptional()
+  @IsObject()
+  settings?: {
+    resolution?: string;
+    colorDepth?: number;
+    enableAudio?: boolean;
+    enableClipboard?: boolean;
+    enableFileTransfer?: boolean;
+    enablePrinting?: boolean;
+    enableRecording?: boolean;
+  };
+
+  @ApiPropertyOptional({ description: 'Auto-start session' })
+  @IsOptional()
+  @IsBoolean()
+  autoStart?: boolean;
+
+  @ApiPropertyOptional({ description: 'Session tags' })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  tags?: string[];
+}
+
+export class UpdateSessionDto {
+  @ApiPropertyOptional({ description: 'Session name' })
+  @IsOptional()
+  @IsString()
+  name?: string;
+
+  @ApiPropertyOptional({ description: 'Session description' })
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @ApiPropertyOptional({ description: 'Session duration in minutes' })
+  @IsOptional()
+  @IsNumber()
+  @Min(1)
+  @Max(1440)
+  duration?: number;
+
+  @ApiPropertyOptional({ description: 'Maximum concurrent connections' })
+  @IsOptional()
+  @IsNumber()
+  @Min(1)
+  @Max(10)
+  maxConnections?: number;
+
+  @ApiPropertyOptional({ description: 'Session settings' })
+  @IsOptional()
+  @IsObject()
+  settings?: any;
+
+  @ApiPropertyOptional({ description: 'Session tags' })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  tags?: string[];
+}
+
+export class SessionQueryDto {
+  @ApiPropertyOptional({ description: 'Page number' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(1)
+  page?: number;
+
+  @ApiPropertyOptional({ description: 'Items per page' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(1)
+  @Max(100)
+  limit?: number;
+
+  @ApiPropertyOptional({ description: 'Search term' })
+  @IsOptional()
+  @IsString()
+  search?: string;
+
+  @ApiPropertyOptional({ enum: SessionType, description: 'Session type filter' })
+  @IsOptional()
+  @IsEnum(SessionType)
+  type?: SessionType;
+
+  @ApiPropertyOptional({ enum: SessionStatus, description: 'Session status filter' })
+  @IsOptional()
+  @IsEnum(SessionStatus)
+  status?: SessionStatus;
+
+  @ApiPropertyOptional({ description: 'Tags filter' })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  tags?: string[];
+}
+
+export class CreateVdiDto {
+  @ApiProperty({ description: 'VDI instance name' })
+  @IsString()
+  name: string;
+
+  @ApiPropertyOptional({ description: 'VDI description' })
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @ApiProperty({ description: 'VDI template or image ID' })
+  @IsString()
+  templateId: string;
+
+  @ApiProperty({ enum: VdiType, description: 'Operating system type' })
+  @IsEnum(VdiType)
+  osType: VdiType;
+
+  @ApiProperty({ description: 'CPU cores' })
+  @IsNumber()
+  @Min(1)
+  @Max(16)
+  cpuCores: number;
+
+  @ApiProperty({ description: 'RAM in GB' })
+  @IsNumber()
+  @Min(1)
+  @Max(64)
+  ramGb: number;
+
+  @ApiProperty({ description: 'Storage in GB' })
+  @IsNumber()
+  @Min(10)
+  @Max(1000)
+  storageGb: number;
+
+  @ApiPropertyOptional({ description: 'Auto-start VDI' })
+  @IsOptional()
+  @IsBoolean()
+  autoStart?: boolean;
+
+  @ApiPropertyOptional({ description: 'VDI tags' })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  tags?: string[];
+}
+
+export class VdiQueryDto extends SessionQueryDto {
+  @ApiPropertyOptional({ enum: VdiType, description: 'VDI OS type filter' })
+  @IsOptional()
+  @IsEnum(VdiType)
+  osType?: VdiType;
+}
+
+// Export aliases for backward compatibility
+export class CreateVdiInstanceDto extends CreateVdiDto {}
+
+export class CreateRdpSessionDto {
+  @ApiProperty({ description: 'RDP session name' })
+  @IsString()
+  name: string;
+
+  @ApiPropertyOptional({ description: 'RDP session description' })
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @ApiProperty({ enum: ConnectionProtocol, description: 'Connection protocol' })
+  @IsEnum(ConnectionProtocol)
+  protocol: ConnectionProtocol;
+
+  @ApiPropertyOptional({ enum: VdiType, description: 'VDI type for RDP session' })
+  @IsOptional()
+  @IsEnum(VdiType)
+  vdiType?: VdiType;
+
+  @ApiProperty({ description: 'Target host address' })
+  @IsString()
+  host: string;
+
+  @ApiPropertyOptional({ description: 'Target port' })
+  @IsOptional()
+  @IsNumber()
+  port?: number;
+
+  @ApiPropertyOptional({ description: 'Username for RDP connection' })
+  @IsOptional()
+  @IsString()
+  username?: string;
+
+  @ApiPropertyOptional({ description: 'Password for RDP connection' })
+  @IsOptional()
+  @IsString()
+  password?: string;
+}
+
+export class UpdateRdpSessionDto {
+  @ApiPropertyOptional({ description: 'RDP session name' })
+  @IsOptional()
+  @IsString()
+  name?: string;
+
+  @ApiPropertyOptional({ description: 'RDP session description' })
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @ApiPropertyOptional({ description: 'Target host address' })
+  @IsOptional()
+  @IsString()
+  host?: string;
+
+  @ApiPropertyOptional({ description: 'Target port' })
+  @IsOptional()
+  @IsNumber()
+  port?: number;
+
+  @ApiPropertyOptional({ description: 'Username for RDP connection' })
+  @IsOptional()
+  @IsString()
+  username?: string;
+
+  @ApiPropertyOptional({ description: 'Password for RDP connection' })
+  @IsOptional()
+  @IsString()
+  password?: string;
+}
+
+export class ConnectSessionDto {
+  @ApiProperty({ description: 'Session ID to connect to' })
+  @IsString()
+  sessionId: string;
+
+  @ApiPropertyOptional({ description: 'Username for connection' })
+  @IsOptional()
+  @IsString()
+  username?: string;
+
+  @ApiPropertyOptional({ description: 'Password for connection' })
+  @IsOptional()
+  @IsString()
+  password?: string;
+
+  @ApiPropertyOptional({ description: 'Connection settings' })
+  @IsOptional()
+  @IsObject()
+  settings?: {
+    resolution?: string;
+    colorDepth?: number;
+    enableAudio?: boolean;
+    enableClipboard?: boolean;
+  };
+}

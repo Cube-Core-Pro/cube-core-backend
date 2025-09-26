@@ -1,0 +1,21 @@
+# Dependencies - Railway will reinstall these
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build outputs - Railway will rebuild these
+dist/
+build/
+.output/
+
+# Prisma generated files - Railway will regenerate
+prisma/generated/
+node_modules/.prisma/
+node_modules/@prisma/
+
+# Development files
+coverage/
+*.log
+.cache/
+.DS_Store

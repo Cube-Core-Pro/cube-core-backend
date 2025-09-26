@@ -1,0 +1,245 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Analytic {
+  id        String   @id
+  metric    String
+  value     Float
+  tenantId  String
+  createdAt DateTime @default(now())
+  Tenant    Tenant   @relation(fields: [tenantId], references: [id])
+}
+
+model AntifraudRule {
+  id         String   @id
+  name       String
+  conditions Json
+  tenantId   String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime
+  Tenant     Tenant   @relation(fields: [tenantId], references: [id])
+}
+
+model AuditLog {
+  id              String          @id
+  action          String
+  entity          String
+  entityId        String
+  userId          String
+  tenantId        String
+  details         Json?
+  createdAt       DateTime        @default(now())
+  Tenant          Tenant          @relation(fields: [tenantId], references: [id])
+  User            User            @relation(fields: [userId], references: [id])
+  BankAccount     BankAccount     @relation(fields: [entityId], references: [id], map: "fk_auditlog_bankaccount")
+  Lead            Lead            @relation(fields: [entityId], references: [id], map: "fk_auditlog_lead")
+  Order           Order           @relation(fields: [entityId], references: [id], map: "fk_auditlog_order")
+  Product         Product         @relation(fields: [entityId], references: [id], map: "fk_auditlog_product")
+  Ticket          Ticket          @relation(fields: [entityId], references: [id], map: "fk_auditlog_ticket")
+  BankTransaction BankTransaction @relation(fields: [entityId], references: [id], map: "fk_auditlog_transaction")
+}
+
+model BankAccount {
+  balance         Float
+  accountNumber   String            @unique
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime
+  userId          String?
+  id              String            @id
+  tenantId        String
+  AuditLog        AuditLog[]
+  Tenant          Tenant            @relation(fields: [tenantId], references: [id])
+  User            User?             @relation(fields: [userId], references: [id])
+  BankTransaction BankTransaction[]
+}
+
+model BankTransaction {
+  id          String      @id
+  accountId   String
+  amount      Float
+  type        String
+  description String?
+  tenantId    String
+  createdAt   DateTime    @default(now())
+  AuditLog    AuditLog[]
+  BankAccount BankAccount @relation(fields: [accountId], references: [id])
+  Tenant      Tenant      @relation(fields: [tenantId], references: [id])
+}
+
+model EmailVerificationToken {
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  id        String   @id
+  userId    String
+  User      User     @relation(fields: [userId], references: [id])
+}
+
+model Lead {
+  id        String     @id
+  name      String
+  email     String
+  phone     String?
+  status    String     @default("NEW")
+  tenantId  String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime
+  AuditLog  AuditLog[]
+  Tenant    Tenant     @relation(fields: [tenantId], references: [id])
+}
+
+model Notification {
+  id        String   @id
+  userId    String
+  tenantId  String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  Tenant    Tenant   @relation(fields: [tenantId], references: [id])
+  User      User     @relation(fields: [userId], references: [id])
+}
+
+model Order {
+  id        String     @id
+  productId String
+  quantity  Int
+  status    String     @default("PENDING")
+  tenantId  String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime
+  AuditLog  AuditLog[]
+  Product   Product    @relation(fields: [productId], references: [id])
+  Tenant    Tenant     @relation(fields: [tenantId], references: [id])
+}
+
+model PasswordResetToken {
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  id        String   @id
+  userId    String
+  User      User     @relation(fields: [userId], references: [id])
+}
+
+model Product {
+  id        String     @id
+  name      String
+  price     Float
+  stock     Int
+  tenantId  String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime
+  AuditLog  AuditLog[]
+  Order     Order[]
+  Tenant    Tenant     @relation(fields: [tenantId], references: [id])
+}
+
+model Role {
+  id        String     @id
+  name      String     @unique
+  tenantId  String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime
+  Tenant    Tenant     @relation(fields: [tenantId], references: [id])
+  UserRole  UserRole[]
+}
+
+model SiatFlow {
+  id        String   @id
+  name      String
+  prompt    String
+  config    Json
+  tenantId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  Tenant    Tenant   @relation(fields: [tenantId], references: [id])
+}
+
+model Tenant {
+  name            String            @unique
+  domain          String?           @unique
+  createdAt       DateTime          @default(now())
+  logo            String?
+  updatedAt       DateTime
+  id              String            @id
+  Analytic        Analytic[]
+  AntifraudRule   AntifraudRule[]
+  AuditLog        AuditLog[]
+  BankAccount     BankAccount[]
+  BankTransaction BankTransaction[]
+  Lead            Lead[]
+  Notification    Notification[]
+  Order           Order[]
+  Product         Product[]
+  Role            Role[]
+  SiatFlow        SiatFlow[]
+  Ticket          Ticket[]
+  User            User[]
+  UserRole        UserRole[]
+}
+
+model Ticket {
+  id          String     @id
+  subject     String
+  description String
+  status      String     @default("OPEN")
+  tenantId    String
+  userId      String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime
+  AuditLog    AuditLog[]
+  Tenant      Tenant     @relation(fields: [tenantId], references: [id])
+  User        User?      @relation(fields: [userId], references: [id])
+}
+
+model User {
+  name                   String
+  email                  String                   @unique
+  password               String
+  role                   String                   @default("USER")
+  createdAt              DateTime                 @default(now())
+  updatedAt              DateTime
+  isEmailVerified        Boolean                  @default(false)
+  id                     String                   @id
+  tenantId               String
+  AuditLog               AuditLog[]
+  BankAccount            BankAccount[]
+  EmailVerificationToken EmailVerificationToken[]
+  Notification           Notification[]
+  PasswordResetToken     PasswordResetToken[]
+  Ticket                 Ticket[]
+  Tenant                 Tenant                   @relation(fields: [tenantId], references: [id])
+  UserRole               UserRole[]
+}
+
+model UserRole {
+  userId    String
+  roleId    String
+  tenantId  String
+  createdAt DateTime @default(now())
+  Role      Role     @relation(fields: [roleId], references: [id])
+  Tenant    Tenant   @relation(fields: [tenantId], references: [id])
+  User      User     @relation(fields: [userId], references: [id])
+
+  @@id([userId, roleId, tenantId])
+}
+
+enum TenantStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  TRIAL
+}
+
+enum SubscriptionPlan {
+  STARTER
+  PROFESSIONAL
+  ENTERPRISE
+  CUSTOM
+}

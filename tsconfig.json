@@ -1,0 +1,75 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "strictPropertyInitialization": false,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "target": "ES2020",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false,
+    "useDefineForClassFields": false,
+    "paths": {
+      "@/*": [
+        "src/*"
+      ],
+      "@/common/*": [
+        "src/common/*"
+      ],
+      "@/config/*": [
+        "src/config/*"
+      ],
+      "@/database/*": [
+        "src/database/*"
+      ],
+      "@/auth/*": [
+        "src/auth/*"
+      ],
+      "@/users/*": [
+        "src/users/*"
+      ],
+      "@/dashboard/*": [
+        "src/dashboard/*"
+      ],
+      "@/crm/*": [
+        "src/crm/*"
+      ],
+      "@/banking/*": [
+        "src/banking/*"
+      ],
+      "@/billing/*": [
+        "src/billing/*"
+      ],
+      "@/audit/*": [
+        "src/audit/*"
+      ],
+      "@/antifraud/*": [
+        "src/antifraud/*"
+      ],
+      "@/pos/*": [
+        "src/pos/*"
+      ]
+    },
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "test"
+  ]
+}

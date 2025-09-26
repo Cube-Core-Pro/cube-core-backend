@@ -1,0 +1,4283 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  name                                                         String
+  email                                                        String                   @unique
+  password                                                     String
+  role                                                         String                   @default("USER")
+  createdAt                                                    DateTime                 @default(now())
+  updatedAt                                                    DateTime                 @updatedAt
+  isEmailVerified                                              Boolean                  @default(false)
+  isVerified                                                   Boolean                  @default(false)
+  deletedAt                                                    DateTime?
+  id                                                           String                   @id @default(uuid())
+  tenantId                                                     String
+  firstName                                                    String?
+  lastName                                                     String?
+  phone                                                        String?
+  avatar                                                       String?
+  timezone                                                     String                   @default("UTC")
+  language                                                     String                   @default("en")
+  lastLoginAt                                                  DateTime?
+  isActive                                                     Boolean                  @default(true)
+  preferences                                                  Json?
+  AuditLog                                                     AuditLog[]
+  BankAccount                                                  BankAccount[]
+  EmailVerificationToken                                       EmailVerificationToken[]
+  PasswordResetToken                                           PasswordResetToken[]
+  Ticket                                                       Ticket[]
+  UserRole                                                     UserRole[]
+  ai_predictions                                               ai_predictions[]
+  alerts_alerts_acknowledgedByIdTousers                        alerts[]                 @relation("alerts_acknowledgedByIdTousers")
+  alerts_alerts_resolvedByIdTousers                            alerts[]                 @relation("alerts_resolvedByIdTousers")
+  assets                                                       assets[]
+  chat_messages                                                chat_messages[]
+  chat_room_members                                            chat_room_members[]
+  chat_rooms                                                   chat_rooms[]
+  compliance_assessments                                       compliance_assessments[]
+  crm_activities                                               crm_activities[]
+  crm_contacts                                                 crm_contacts[]
+  crm_opportunities                                            crm_opportunities[]
+  document_folders                                             document_folders[]
+  document_permissions_document_permissions_grantedByIdTousers document_permissions[]   @relation("document_permissions_grantedByIdTousers")
+  document_permissions_document_permissions_userIdTousers      document_permissions[]   @relation("document_permissions_userIdTousers")
+  document_versions                                            document_versions[]
+  documents                                                    documents[]
+  employees                                                    employees?
+  generated_reports                                            generated_reports[]
+  inventory_movements                                          inventory_movements[]
+  journal_entries_journal_entries_approvedByIdTousers          journal_entries[]        @relation("journal_entries_approvedByIdTousers")
+  journal_entries_journal_entries_createdByIdTousers           journal_entries[]        @relation("journal_entries_createdByIdTousers")
+  leave_requests                                               leave_requests[]
+  maintenance_records                                          maintenance_records[]
+  performance_reviews                                          performance_reviews[]
+  project_resources                                            project_resources[]
+  project_tasks                                                project_tasks[]
+  projects                                                     projects[]
+  purchase_orders_purchase_orders_approvedByIdTousers          purchase_orders[]        @relation("purchase_orders_approvedByIdTousers")
+  purchase_orders_purchase_orders_createdByIdTousers           purchase_orders[]        @relation("purchase_orders_createdByIdTousers")
+  quality_audits                                               quality_audits[]
+  report_templates                                             report_templates[]
+  risk_assessments                                             risk_assessments[]
+  risk_controls                                                risk_controls[]
+  time_entries_time_entries_approvedByTousers                  time_entries[]           @relation("time_entries_approvedByTousers")
+  time_entries_time_entries_userIdTousers                      time_entries[]           @relation("time_entries_userIdTousers")
+  tenants                                                      Tenant                   @relation(fields: [tenantId], references: [id])
+  createdSiatFlows                                             SiatFlow[]               @relation("SiatFlowCreator")
+  siatExecutions                                               SiatExecution[]          @relation("SiatExecutionExecutor")
+  createdSiatTemplates                                         SiatTemplate[]           @relation("SiatTemplateCreator")
+  siatPrompts                                                  SiatPrompt[]             @relation("SiatPromptUser")
+  createdOfficeDocuments                                       OfficeDocument[]         @relation("OfficeDocumentCreator")
+  modifiedOfficeDocuments                                      OfficeDocument[]         @relation("OfficeDocumentModifier")
+  createdOfficeFolders                                         OfficeFolder[]           @relation("OfficeFolderCreator")
+  documentCollaborations                                       DocumentCollaborator[]   @relation("DocumentCollaboratorUser")
+  documentVersions                                             DocumentVersion[]        @relation("DocumentVersionCreator")
+  officeVersions                                               OfficeVersion[]          @relation("OfficeVersionCreator")
+  documentComments                                             DocumentComment[]        @relation("DocumentCommentUser")
+  enterpriseEmails                                             EnterpriseEmail[]        @relation("EnterpriseEmailUser")
+  emailFolders                                                 EmailFolder[]            @relation("EmailFolderUser")
+  createdEmailTemplates                                        EmailTemplate[]          @relation("EmailTemplateCreator")
+  hostedVideoMeetings                                          VideoMeeting[]           @relation("VideoMeetingHost")
+  createdBreakoutRooms                                         BreakoutRoom[]           @relation("BreakoutRoomCreator")
+  remoteSessions                                               RemoteSession[]          @relation("RemoteSessionUser")
+  mfaDevices                                                   MfaDevice[]
+
+  collaborationSessions     CollaborationSession[]
+  collaborationInvitations  CollaborationInvitation[]
+  documentActivities        DocumentActivity[]
+  documentChanges           DocumentChange[]
+  meetingParticipants       MeetingParticipant[]
+  meetingChatMessages       MeetingChatMessage[]
+  receivedChatMessages      MeetingChatMessage[]      @relation("ChatMessageRecipient")
+  createdMeetingPolls       MeetingPoll[]
+  meetingPollResponses      MeetingPollResponse[]
+  meetingQualityMetrics     MeetingQualityMetric[]
+  emailFilters              EmailFilter[]
+  emailAccounts             EmailAccount[]
+  emailSignatures           EmailSignature[]
+  blockedSenders            BlockedSender[]
+  vdiInstances              VdiInstance[]
+  sessionPermissions        SessionPermission[]
+  grantedSessionPermissions SessionPermission[]       @relation("SessionPermissionGranter")
+  sessionRecordings         SessionRecording[]
+  sessionTemplates          SessionTemplate[]
+  posTransactions           PosTransaction[]
+  posInventoryMovements     PosInventoryMovement[]
+  posShifts                 PosShift[]
+  files                     File[]
+  userNotifications         UserNotification[]
+  remoteDesktopSessions     RemoteDesktopSession[]
+  fileDownloadLogs          FileDownloadLog[]
+  amlAlerts                 AmlAlert[]
+  complianceDocuments       ComplianceDocument[]
+  regulatoryReports         RegulatoryReport[]
+  fraudAlerts               FraudAlert[]
+  assignedFraudAlerts       FraudAlert[]              @relation("FraudAlertAssignee")
+  trustedDevices            TrustedDevice[]
+  emailMailboxes            EmailMailbox[]
+  emails                    Email[]
+  officeSharesCreated       OfficeShare[]             @relation("OfficeShareUser")
+  officeSharesReceived      OfficeShare[]             @relation("OfficeShareSharedWith")
+  createdOfficeTemplates    OfficeTemplate[]
+  officeComments            OfficeComment[]           @relation("OfficeCommentUser")
+  createdSpamRules          SpamRule[]
+  officeInvitationsSent     OfficeInvitation[]        @relation("OfficeInvitationInviter")
+  officeActivities          OfficeActivity[]          @relation("OfficeActivityUser")
+  officeChanges             OfficeChange[]
+  officeSessions            OfficeSession[]
+  TokenizationAlert         TokenizationAlert[]
+  tokenizationDashboardSnapshots TokenizationDashboardSnapshot[]
+
+  @@index([email])
+  @@index([isActive])
+  @@index([role])
+  @@index([tenantId])
+  @@map("users")
+}
+
+/// MFA device registered for a user (TOTP / WEBAUTHN / SMS / EMAIL)
+model MfaDevice {
+  id              String    @id @default(uuid())
+  userId          String
+  tenantId        String
+  method          String // TOTP | WEBAUTHN | SMS | EMAIL | BACKUP_CODES
+  name            String
+  status          String    @default("PENDING_SETUP") // PENDING_SETUP | ENABLED | DISABLED
+  isPrimary       Boolean   @default(false)
+  verified        Boolean   @default(false)
+  secretEncrypted String? // Base32 secret encrypted (for TOTP)
+  iv              String? // IV used for encryption
+  createdAt       DateTime  @default(now())
+  lastUsedAt      DateTime?
+
+  backupCodes MfaBackupCode[]
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId, method])
+}
+
+/// Backup code for MFA devices (hashed, one-time use)
+model MfaBackupCode {
+  id        String    @id @default(uuid())
+  deviceId  String
+  codeHash  String
+  used      Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  usedAt    DateTime?
+
+  device MfaDevice @relation(fields: [deviceId], references: [id])
+
+  @@index([deviceId, used])
+}
+
+model Role {
+  id                   String                 @id @default(uuid())
+  name                 String
+  tenantId             String
+  description          String?
+  permissions          Json?
+  isSystemRole         Boolean                @default(false)
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+  UserRole             UserRole[]
+  document_permissions document_permissions[]
+  tenants              Tenant                 @relation(fields: [tenantId], references: [id])
+
+  @@unique([name, tenantId])
+  @@map("roles")
+}
+
+model Tenant {
+  name                     String                    @unique
+  domain                   String?                   @unique
+  createdAt                DateTime                  @default(now())
+  logo                     String?
+  updatedAt                DateTime                  @updatedAt
+  id                       String                    @id @default(uuid())
+  status                   TenantStatus              @default(ACTIVE)
+  subscriptionPlan         SubscriptionPlan          @default(STARTER)
+  subscriptionExpiry       DateTime?
+  maxUsers                 Int                       @default(10)
+  features                 Json?
+  settings                 Json?
+  storageLimit             BigInt                    @default(10737418240) // 10GB default
+  Analytic                 Analytic[]
+  AntifraudRule            AntifraudRule[]
+  AuditLog                 AuditLog[]
+  BankAccount              BankAccount[]
+  BankTransaction          BankTransaction[]
+  Lead                     Lead[]
+  Notification             Notification[]
+  Order                    Order[]
+  Product                  Product[]
+  SiatFlow                 SiatFlow[]
+  OfficeDocument           OfficeDocument[]
+  OfficeFolder             OfficeFolder[]
+  EnterpriseEmail          EnterpriseEmail[]
+  EmailFolder              EmailFolder[]
+  EmailTemplate            EmailTemplate[]
+  EmailSecurityLog         EmailSecurityLog[]
+  QuarantinedFile          QuarantinedFile[]
+  VideoMeeting             VideoMeeting[]
+  BreakoutRoom             BreakoutRoom[]
+  MeetingRecording         MeetingRecording[]
+  RemoteSession            RemoteSession[]
+  Ticket                   Ticket[]
+  UserRole                 UserRole[]
+  accounts                 accounts[]
+  ai_models                ai_models[]
+  ai_predictions           ai_predictions[]
+  alert_rules              alert_rules[]
+  alerts                   alerts[]
+  assets                   assets[]
+  banking_accounts         banking_accounts[]
+  broker_credentials       broker_credentials[]
+  cards                    cards[]
+  chart_of_accounts        chart_of_accounts[]
+  chat_rooms               chat_rooms[]
+  commission_schedules     commission_schedules[]
+  compliance_assessments   compliance_assessments[]
+  compliance_frameworks    compliance_frameworks[]
+  crm_activities           crm_activities[]
+  crm_contacts             crm_contacts[]
+  crm_opportunities        crm_opportunities[]
+  customers                Customer[]
+  document_folders         document_folders[]
+  documents                documents[]
+  employees                employees[]
+  erp_modules              erp_modules[]
+  executions               executions[]
+  generated_reports        generated_reports[]
+  integrations             integrations[]
+  inventory_items          inventory_items[]
+  inventory_movements      inventory_movements[]
+  invoices                 Invoice[]
+  journal_entries          journal_entries[]
+  leave_requests           leave_requests[]
+  maintenance_records      maintenance_records[]
+  payments                 payments[]
+  performance_reviews      performance_reviews[]
+  project_resources        project_resources[]
+  project_tasks            project_tasks[]
+  projects                 projects[]
+  purchase_orders          purchase_orders[]
+  quality_audits           quality_audits[]
+  quality_standards        quality_standards[]
+  rebate_ledgers           rebate_ledgers[]
+  report_templates         report_templates[]
+  risk_assessments         risk_assessments[]
+  roles                    Role[]
+  stock_levels             stock_levels[]
+  suppliers                suppliers[]
+  system_metrics           system_metrics[]
+  time_entries             time_entries[]
+  transactions             Transaction[]
+  users                    User[]
+  siatExecutions           SiatExecution[]
+  siatTemplates            SiatTemplate[]
+  siatPrompts              SiatPrompt[]
+  documentPermissions      document_permissions[]
+  collaborationSessions    CollaborationSession[]
+  collaborationInvitations CollaborationInvitation[]
+  documentActivities       DocumentActivity[]
+  documentChanges          DocumentChange[]
+  meetingParticipants      MeetingParticipant[]
+  meetingChatMessages      MeetingChatMessage[]
+  meetingPolls             MeetingPoll[]
+  meetingPollResponses     MeetingPollResponse[]
+  meetingQualityMetrics    MeetingQualityMetric[]
+  emailFilters             EmailFilter[]
+  emailAttachments         EmailAttachment[]
+  emailAccounts            EmailAccount[]
+  emailSignatures          EmailSignature[]
+  blockedSenders           BlockedSender[]
+  vdiInstances             VdiInstance[]
+  sessionPermissions       SessionPermission[]
+  sessionRecordings        SessionRecording[]
+  sessionMetrics           SessionMetric[]
+  sessionTemplates         SessionTemplate[]
+  posProducts              PosProduct[]
+  posCustomers             PosCustomer[]
+  posTransactions          PosTransaction[]
+  posTransactionItems      PosTransactionItem[]
+  posPayments              PosPayment[]
+  posInventoryMovements    PosInventoryMovement[]
+  posTerminals             PosTerminal[]
+  posShifts                PosShift[]
+  files                    File[]
+  notificationTemplates    NotificationTemplate[]
+  remoteDesktopSessions    RemoteDesktopSession[]
+  fileShares               FileShare[]
+
+  fraudAlerts       FraudAlert[]
+  fraudRules        FraudRule[]
+  trustedDevices    TrustedDevice[]
+  fraudStatistics   FraudStatistics[]
+  emailMailboxes    EmailMailbox[]
+  emails            Email[]
+  senderReputations SenderReputation[]
+  officeShares      OfficeShare[]
+  officeTemplates   OfficeTemplate[]
+  officeComments    OfficeComment[]
+  officeInvitations OfficeInvitation[]
+  officeActivities  OfficeActivity[]
+  officeChanges     OfficeChange[]
+  officeSessions    OfficeSession[]
+  spamRules         SpamRule[]
+  TokenizationAlert TokenizationAlert[]
+  Nft               Nft[]
+  NftCollection     NftCollection[]
+  NftListing        NftListing[]
+  NftOffer          NftOffer[]
+  NftTransfer       NftTransfer[]
+  NftSale           NftSale[]
+  SmartContract     SmartContract[]
+  tokenizationDashboardSnapshots TokenizationDashboardSnapshot[]
+  LandingPageContent LandingPageContent[]
+  WebsiteAnalytics  WebsiteAnalytics[]
+
+  @@map("tenants")
+}
+
+model Customer {
+  id           String         @id @default(uuid())
+  unitId       String         @unique
+  type         CustomerType
+  firstName    String?
+  lastName     String?
+  businessName String?
+  email        String
+  phone        String?
+  ssn          String?
+  ein          String?
+  dateOfBirth  DateTime?
+  address      Json?
+  status       CustomerStatus @default(PENDING)
+  kycStatus    KYCStatus      @default(PENDING)
+  tenantId     String
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  accounts     accounts[]
+  cards        cards[]
+  tenants      Tenant         @relation(fields: [tenantId], references: [id])
+  payments     payments[]
+
+  @@index([email])
+  @@index([status])
+  @@index([tenantId])
+  @@map("customers")
+}
+
+model Transaction {
+  id           String               @id @default(uuid())
+  unitId       String               @unique
+  accountId    String
+  type         TransactionType
+  direction    TransactionDirection
+  amount       Float
+  balance      Float?
+  description  String?
+  counterparty Json?
+  status       TransactionStatus    @default(PENDING)
+  tags         Json?
+  tenantId     String
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+  account      accounts             @relation(fields: [accountId], references: [id])
+  tenants      Tenant               @relation(fields: [tenantId], references: [id])
+
+  @@index([accountId])
+  @@index([status])
+  @@index([tenantId])
+  @@index([type])
+  @@map("transactions")
+}
+
+model Invoice {
+  id             String    @id @default(uuid())
+  invoiceNumber  String    @unique
+  customerId     String?
+  customerName   String
+  customerEmail  String?
+  amount         Float
+  currency       String    @default("USD")
+  status         String    @default("DRAFT")
+  dueDate        DateTime
+  issueDate      DateTime  @default(now())
+  paidDate       DateTime?
+  description    String?
+  items          Json?
+  taxAmount      Float     @default(0)
+  discountAmount Float     @default(0)
+  totalAmount    Float
+  notes          String?
+  tenantId       String
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  tenants        Tenant    @relation(fields: [tenantId], references: [id])
+
+  @@index([customerId])
+  @@index([dueDate])
+  @@index([status])
+  @@index([tenantId])
+  @@map("invoices")
+}
+
+model SystemSetting {
+  id                String   @id @default(uuid())
+  maintenanceMode   Boolean  @default(false)
+  allowRegistration Boolean  @default(true)
+  maxTenantsLimit   Int      @default(100)
+  systemMessage     String?
+  emailSettings     Json?
+  securitySettings  Json?
+  backupSettings    Json?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@map("system_settings")
+}
+
+model Analytic {
+  id        String   @id
+  metric    String
+  value     Float
+  tenantId  String
+  createdAt DateTime @default(now())
+  tenants   Tenant   @relation(fields: [tenantId], references: [id])
+}
+
+model AntifraudRule {
+  id         String   @id
+  name       String
+  conditions Json
+  tenantId   String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime
+  tenants    Tenant   @relation(fields: [tenantId], references: [id])
+}
+
+model AuditLog {
+  id              String          @id
+  action          String
+  entity          String
+  entityId        String
+  userId          String
+  tenantId        String
+  resource        String?
+  details         Json?
+  createdAt       DateTime        @default(now())
+  tenants         Tenant          @relation(fields: [tenantId], references: [id])
+  users           User            @relation(fields: [userId], references: [id])
+  BankAccount     BankAccount     @relation(fields: [entityId], references: [id], map: "fk_auditlog_bankaccount")
+  Lead            Lead            @relation(fields: [entityId], references: [id], map: "fk_auditlog_lead")
+  Order           Order           @relation(fields: [entityId], references: [id], map: "fk_auditlog_order")
+  Product         Product         @relation(fields: [entityId], references: [id], map: "fk_auditlog_product")
+  Ticket          Ticket          @relation(fields: [entityId], references: [id], map: "fk_auditlog_ticket")
+  BankTransaction BankTransaction @relation(fields: [entityId], references: [id], map: "fk_auditlog_transaction")
+}
+
+model BankAccount {
+  balance         Float
+  accountNumber   String            @unique
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime
+  userId          String?
+  id              String            @id
+  tenantId        String
+  AuditLog        AuditLog[]
+  tenants         Tenant            @relation(fields: [tenantId], references: [id])
+  users           User?             @relation(fields: [userId], references: [id])
+  BankTransaction BankTransaction[]
+}
+
+model BankTransaction {
+  id          String      @id
+  accountId   String
+  amount      Float
+  type        String
+  description String?
+  tenantId    String
+  createdAt   DateTime    @default(now())
+  AuditLog    AuditLog[]
+  BankAccount BankAccount @relation(fields: [accountId], references: [id])
+  tenants     Tenant      @relation(fields: [tenantId], references: [id])
+
+  @@index([accountId])
+  @@index([createdAt])
+  @@index([tenantId])
+  @@index([type])
+}
+
+/// Immutable security audit event with hash chain and optional signature
+model SecurityAuditEvent {
+  id            String   @id @default(uuid())
+  tenantId      String
+  userId        String?
+  userEmail     String?
+  userRoles     Json?
+  eventType     String
+  severity      String
+  action        String
+  description   String
+  outcome       String
+  resourceType  String?
+  resourceId    String?
+  requestId     String?
+  correlationId String?
+  traceId       String?
+  ipAddress     String?
+  userAgent     String?
+  metadata      Json?
+  compliance    Json?
+  riskScore     Int?
+  riskFactors   Json?
+  prevHash      String?
+  hash          String
+  signature     String?
+  createdAt     DateTime @default(now())
+
+  @@index([tenantId, createdAt])
+  @@index([eventType, createdAt])
+  @@index([severity])
+}
+
+/// Stored attestation of audit chain integrity for a given period and tenant
+model SecurityAuditAttestation {
+  id             String    @id @default(uuid())
+  tenantId       String
+  start          DateTime?
+  end            DateTime?
+  anchorPrevHash String?
+  lastHash       String?
+  ok             Boolean
+  count          Int
+  version        String    @default("1.0")
+  algorithm      String    @default("HMAC-SHA256")
+  signature      String?
+  generatedAt    DateTime  @default(now())
+
+  @@index([tenantId, generatedAt])
+}
+
+model EmailVerificationToken {
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  id        String   @id
+  userId    String
+  users     User     @relation(fields: [userId], references: [id])
+}
+
+model Lead {
+  id        String     @id
+  name      String
+  email     String
+  phone     String?
+  status    String     @default("NEW")
+  tenantId  String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime
+  AuditLog  AuditLog[]
+  tenants   Tenant     @relation(fields: [tenantId], references: [id])
+}
+
+model Notification {
+  id            String    @id @default(uuid())
+  tenantId      String
+  type          String // EMAIL, SMS, PUSH, IN_APP, WEBHOOK, SLACK, TEAMS
+  priority      String    @default("NORMAL") // LOW, NORMAL, HIGH, URGENT
+  subject       String?
+  body          String
+  recipients    Json // Array of NotificationRecipient objects
+  data          Json? // Additional data payload
+  status        String    @default("PENDING") // PENDING, SENT, DELIVERED, READ, FAILED, CANCELLED
+  scheduledAt   DateTime?
+  expiresAt     DateTime?
+  sentAt        DateTime?
+  deliveredAt   DateTime?
+  readAt        DateTime?
+  failureReason String?
+  retryCount    Int       @default(0)
+  maxRetries    Int       @default(3)
+  metadata      Json? // Additional metadata
+  templateId    String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  tenant            Tenant                @relation(fields: [tenantId], references: [id])
+  template          NotificationTemplate? @relation(fields: [templateId], references: [id])
+  userNotifications UserNotification[]
+
+  @@index([tenantId])
+  @@index([type])
+  @@index([status])
+  @@index([priority])
+  @@index([scheduledAt])
+  @@index([createdAt])
+  @@map("notifications")
+}
+
+model Order {
+  id        String     @id
+  productId String
+  quantity  Int
+  status    String     @default("PENDING")
+  tenantId  String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime
+  AuditLog  AuditLog[]
+  Product   Product    @relation(fields: [productId], references: [id])
+  tenants   Tenant     @relation(fields: [tenantId], references: [id])
+}
+
+model PasswordResetToken {
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  id        String   @id
+  userId    String
+  users     User     @relation(fields: [userId], references: [id])
+}
+
+model Product {
+  id        String     @id
+  name      String
+  price     Float
+  stock     Int
+  tenantId  String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime
+  AuditLog  AuditLog[]
+  Order     Order[]
+  tenants   Tenant     @relation(fields: [tenantId], references: [id])
+}
+
+model SiatFlow {
+  id             String          @id @default(uuid())
+  name           String
+  description    String?
+  type           String          @default("WORKFLOW")
+  status         String          @default("DRAFT")
+  prompt         String
+  generatedCode  String?
+  config         Json            @default("{}")
+  steps          Json            @default("[]")
+  tags           String[]        @default([])
+  isPublic       Boolean         @default(false)
+  tenantId       String
+  createdBy      String?
+  lastExecutedAt DateTime?
+  executionCount Int             @default(0)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  deletedAt      DateTime?
+  tenant         Tenant          @relation(fields: [tenantId], references: [id])
+  creator        User?           @relation("SiatFlowCreator", fields: [createdBy], references: [id])
+  executions     SiatExecution[]
+
+  @@index([tenantId])
+  @@index([createdBy])
+  @@index([type])
+  @@index([status])
+  @@index([deletedAt])
+  @@map("SiatFlow")
+}
+
+model SiatExecution {
+  id           String    @id @default(uuid())
+  flowId       String
+  status       String    @default("PENDING")
+  inputData    Json      @default("{}")
+  outputData   Json?
+  errorMessage String?
+  startedAt    DateTime  @default(now())
+  completedAt  DateTime?
+  duration     Int?
+  executedBy   String
+  tenantId     String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  flow         SiatFlow  @relation(fields: [flowId], references: [id], onDelete: Cascade)
+  executor     User      @relation("SiatExecutionExecutor", fields: [executedBy], references: [id])
+  tenant       Tenant    @relation(fields: [tenantId], references: [id])
+
+  @@index([flowId])
+  @@index([tenantId])
+  @@index([executedBy])
+  @@index([status])
+  @@index([startedAt])
+  @@map("SiatExecution")
+}
+
+model SiatTemplate {
+  id          String    @id @default(uuid())
+  name        String
+  description String?
+  type        String
+  template    Json      @default("{}")
+  tags        String[]  @default([])
+  isSystem    Boolean   @default(false)
+  tenantId    String
+  createdBy   String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+  tenant      Tenant    @relation(fields: [tenantId], references: [id])
+  creator     User?     @relation("SiatTemplateCreator", fields: [createdBy], references: [id])
+
+  @@index([tenantId])
+  @@index([createdBy])
+  @@index([type])
+  @@index([deletedAt])
+  @@map("SiatTemplate")
+}
+
+model SiatPrompt {
+  id            String   @id @default(uuid())
+  prompt        String
+  type          String
+  generatedCode String?
+  success       Boolean  @default(false)
+  errorMessage  String?
+  tenantId      String
+  userId        String
+  createdAt     DateTime @default(now())
+  tenant        Tenant   @relation(fields: [tenantId], references: [id])
+  user          User     @relation("SiatPromptUser", fields: [userId], references: [id])
+
+  @@index([tenantId])
+  @@index([userId])
+  @@index([type])
+  @@index([createdAt])
+  @@map("SiatPrompt")
+}
+
+// Enterprise Office Suite Models
+model OfficeDocument {
+  id                 String    @id @default(uuid())
+  title              String
+  description        String?
+  type               String // DOCUMENT, SPREADSHEET, PRESENTATION, FORM, TEMPLATE
+  format             String // DOCX, PDF, XLSX, PPTX, etc.
+  content            Json      @default("{}")
+  templateId         String?
+  folderId           String?
+  tags               String[]  @default([])
+  isPublic           Boolean   @default(false)
+  allowCollaboration Boolean   @default(true)
+  settings           Json      @default("{}")
+  version            Int       @default(1)
+  size               Int       @default(0)
+  checksum           String
+  tenantId           String
+  createdBy          String
+  lastModifiedBy     String?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  deletedAt          DateTime?
+
+  tenant         Tenant                 @relation(fields: [tenantId], references: [id])
+  creator        User                   @relation("OfficeDocumentCreator", fields: [createdBy], references: [id])
+  lastModifier   User?                  @relation("OfficeDocumentModifier", fields: [lastModifiedBy], references: [id])
+  template       OfficeDocument?        @relation("DocumentTemplate", fields: [templateId], references: [id])
+  templatedDocs  OfficeDocument[]       @relation("DocumentTemplate")
+  folder         OfficeFolder?          @relation(fields: [folderId], references: [id])
+  collaborators  DocumentCollaborator[]
+  versions       DocumentVersion[]
+  comments       DocumentComment[]
+  officeVersions OfficeVersion[]        @relation("OfficeVersionDocument")
+
+  shares                  OfficeShare[]
+  officeComments          OfficeComment[]
+  officeInvitations       OfficeInvitation[]
+  officeActivities        OfficeActivity[]
+  officeChanges           OfficeChange[]
+  officeSessions          OfficeSession[]
+  CollaborationSession    CollaborationSession[]
+  CollaborationInvitation CollaborationInvitation[]
+  DocumentActivity        DocumentActivity[]
+  DocumentChange          DocumentChange[]
+
+  @@index([tenantId])
+  @@index([createdBy])
+  @@index([type])
+  @@index([folderId])
+  @@index([deletedAt])
+  @@map("OfficeDocument")
+}
+
+model OfficeFolder {
+  id          String    @id @default(uuid())
+  name        String
+  description String?
+  path        String
+  parentId    String?
+  tenantId    String
+  createdBy   String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  tenant    Tenant           @relation(fields: [tenantId], references: [id])
+  creator   User             @relation("OfficeFolderCreator", fields: [createdBy], references: [id])
+  parent    OfficeFolder?    @relation("FolderHierarchy", fields: [parentId], references: [id])
+  children  OfficeFolder[]   @relation("FolderHierarchy")
+  documents OfficeDocument[]
+
+  @@index([tenantId])
+  @@index([parentId])
+  @@index([deletedAt])
+  @@map("OfficeFolder")
+}
+
+model DocumentCollaborator {
+  id         String   @id @default(uuid())
+  documentId String
+  userId     String
+  permission String // READ, WRITE, COMMENT, ADMIN
+  createdAt  DateTime @default(now())
+
+  document OfficeDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  user     User           @relation("DocumentCollaboratorUser", fields: [userId], references: [id])
+
+  @@unique([documentId, userId])
+  @@index([documentId])
+  @@index([userId])
+  @@map("DocumentCollaborator")
+}
+
+model DocumentVersion {
+  id         String   @id @default(uuid())
+  documentId String
+  version    Int
+  changes    String
+  createdBy  String
+  createdAt  DateTime @default(now())
+
+  document OfficeDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  creator  User           @relation("DocumentVersionCreator", fields: [createdBy], references: [id])
+
+  @@index([documentId])
+  @@index([version])
+  @@map("DocumentVersion")
+}
+
+model OfficeVersion {
+  id         String   @id @default(uuid())
+  documentId String
+  version    Int
+  changes    String
+  comment    String?
+  isAutoSave Boolean  @default(false)
+  createdBy  String
+  createdAt  DateTime @default(now())
+
+  document OfficeDocument @relation("OfficeVersionDocument", fields: [documentId], references: [id], onDelete: Cascade)
+  creator  User           @relation("OfficeVersionCreator", fields: [createdBy], references: [id])
+
+  @@index([documentId])
+  @@index([version])
+  @@map("OfficeVersion")
+}
+
+model DocumentComment {
+  id         String   @id @default(uuid())
+  documentId String
+  content    String
+  position   Json? // Position in document for inline comments
+  userId     String
+  createdAt  DateTime @default(now())
+
+  document OfficeDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  user     User           @relation("DocumentCommentUser", fields: [userId], references: [id])
+
+  @@index([documentId])
+  @@index([userId])
+  @@map("DocumentComment")
+}
+
+model OfficeTemplate {
+  id          String   @id @default(uuid())
+  tenantId    String
+  name        String
+  description String?
+  type        String
+  category    String?
+  content     Json
+  thumbnail   String?
+  tags        String[] @default([])
+  isPublic    Boolean  @default(false)
+  createdBy   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  tenant  Tenant @relation(fields: [tenantId], references: [id])
+  creator User   @relation(fields: [createdBy], references: [id])
+
+  @@index([tenantId])
+  @@index([type])
+  @@index([category])
+  @@index([isPublic])
+  @@map("office_templates")
+}
+
+model OfficeShare {
+  id          String    @id @default(uuid())
+  tenantId    String
+  documentId  String
+  userId      String
+  sharedWith  String
+  permissions String
+  message     String?
+  expiresAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  tenant         Tenant         @relation(fields: [tenantId], references: [id])
+  document       OfficeDocument @relation(fields: [documentId], references: [id])
+  user           User           @relation("OfficeShareUser", fields: [userId], references: [id])
+  sharedWithUser User           @relation("OfficeShareSharedWith", fields: [sharedWith], references: [id])
+
+  @@index([tenantId])
+  @@index([documentId])
+  @@index([sharedWith])
+  @@map("office_shares")
+}
+
+model OfficeComment {
+  id         String   @id @default(uuid())
+  tenantId   String
+  documentId String
+  userId     String
+  content    String
+  position   Json?
+  isResolved Boolean  @default(false)
+  parentId   String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  tenant   Tenant          @relation(fields: [tenantId], references: [id])
+  document OfficeDocument  @relation(fields: [documentId], references: [id])
+  user     User            @relation("OfficeCommentUser", fields: [userId], references: [id])
+  parent   OfficeComment?  @relation("OfficeCommentReplies", fields: [parentId], references: [id])
+  replies  OfficeComment[] @relation("OfficeCommentReplies")
+
+  @@index([tenantId])
+  @@index([documentId])
+  @@index([userId])
+  @@index([parentId])
+  @@map("office_comments")
+}
+
+model OfficeInvitation {
+  id         String    @id @default(uuid())
+  tenantId   String
+  documentId String
+  email      String
+  permission String
+  message    String?
+  status     String    @default("PENDING")
+  token      String?   @unique
+  expiresAt  DateTime?
+  invitedBy  String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  tenant   Tenant         @relation(fields: [tenantId], references: [id])
+  document OfficeDocument @relation(fields: [documentId], references: [id])
+  inviter  User           @relation("OfficeInvitationInviter", fields: [invitedBy], references: [id])
+
+  @@index([tenantId])
+  @@index([documentId])
+  @@index([email])
+  @@index([status])
+  @@map("office_invitations")
+}
+
+model OfficeActivity {
+  id         String   @id @default(uuid())
+  tenantId   String
+  documentId String
+  userId     String
+  action     String
+  details    Json?
+  createdAt  DateTime @default(now())
+
+  tenant   Tenant         @relation(fields: [tenantId], references: [id])
+  document OfficeDocument @relation(fields: [documentId], references: [id])
+  user     User           @relation("OfficeActivityUser", fields: [userId], references: [id])
+
+  @@index([tenantId])
+  @@index([documentId])
+  @@index([userId])
+  @@index([action])
+  @@map("office_activities")
+}
+
+model OfficeChange {
+  id         String   @id @default(uuid())
+  tenantId   String
+  documentId String
+  userId     String
+  changeType String
+  changes    Json
+  version    Int?
+  timestamp  DateTime @default(now())
+
+  tenant   Tenant         @relation(fields: [tenantId], references: [id])
+  document OfficeDocument @relation(fields: [documentId], references: [id])
+  user     User           @relation(fields: [userId], references: [id])
+
+  @@index([tenantId])
+  @@index([documentId])
+  @@index([userId])
+  @@index([changeType])
+  @@index([timestamp])
+  @@map("office_changes")
+}
+
+model OfficeSession {
+  id           String    @id @default(uuid())
+  tenantId     String
+  documentId   String
+  userId       String
+  sessionId    String    @unique
+  isActive     Boolean   @default(true)
+  connectionId String?
+  startedAt    DateTime  @default(now())
+  lastActivity DateTime  @default(now())
+  endedAt      DateTime?
+
+  tenant   Tenant         @relation(fields: [tenantId], references: [id])
+  document OfficeDocument @relation(fields: [documentId], references: [id])
+  user     User           @relation(fields: [userId], references: [id])
+
+  @@index([tenantId])
+  @@index([documentId])
+  @@index([userId])
+  @@index([isActive])
+  @@map("office_sessions")
+}
+
+// Enterprise WebMail Models
+model EnterpriseEmail {
+  id                 String    @id @default(uuid())
+  messageId          String    @unique
+  subject            String
+  body               String
+  htmlBody           String?
+  from               String
+  to                 String[]
+  cc                 String[]  @default([])
+  bcc                String[]  @default([])
+  replyTo            String?
+  priority           String    @default("NORMAL") // LOW, NORMAL, HIGH, URGENT
+  type               String // DRAFT, SENT, RECEIVED, TEMPLATE
+  attachments        Json      @default("[]")
+  tags               String[]  @default([])
+  folderId           String?
+  requestReadReceipt Boolean   @default(false)
+  isConfidential     Boolean   @default(false)
+  isRead             Boolean   @default(false)
+  isStarred          Boolean   @default(false)
+  isSpam             Boolean   @default(false)
+  hasVirus           Boolean   @default(false)
+  scheduledAt        DateTime?
+  sentAt             DateTime?
+  deliveredAt        DateTime?
+  readAt             DateTime?
+  templateId         String?
+  templateVariables  Json?
+  metadata           Json      @default("{}")
+  tenantId           String
+  userId             String
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  deletedAt          DateTime?
+
+  tenant           Tenant            @relation(fields: [tenantId], references: [id])
+  user             User              @relation("EnterpriseEmailUser", fields: [userId], references: [id])
+  folder           EmailFolder?      @relation(fields: [folderId], references: [id])
+  template         EmailTemplate?    @relation(fields: [templateId], references: [id])
+  emailAttachments EmailAttachment[]
+
+  @@index([tenantId])
+  @@index([userId])
+  @@index([type])
+  @@index([isRead])
+  @@index([isSpam])
+  @@index([sentAt])
+  @@index([folderId])
+  @@index([deletedAt])
+  @@map("EnterpriseEmail")
+}
+
+model EmailFolder {
+  id        String    @id @default(uuid())
+  name      String
+  parentId  String?
+  tenantId  String
+  userId    String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  tenant   Tenant            @relation(fields: [tenantId], references: [id])
+  user     User              @relation("EmailFolderUser", fields: [userId], references: [id])
+  parent   EmailFolder?      @relation("EmailFolderHierarchy", fields: [parentId], references: [id])
+  children EmailFolder[]     @relation("EmailFolderHierarchy")
+  emails   EnterpriseEmail[]
+  messages Email[]
+
+  @@index([tenantId])
+  @@index([userId])
+  @@index([parentId])
+  @@index([deletedAt])
+  @@map("EmailFolder")
+}
+
+model EmailTemplate {
+  id        String    @id @default(uuid())
+  name      String
+  subject   String
+  body      String
+  htmlBody  String?
+  variables Json      @default("[]") // List of template variables
+  category  String?
+  isSystem  Boolean   @default(false)
+  tenantId  String
+  createdBy String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  tenant  Tenant            @relation(fields: [tenantId], references: [id])
+  creator User              @relation("EmailTemplateCreator", fields: [createdBy], references: [id])
+  emails  EnterpriseEmail[]
+
+  @@index([tenantId])
+  @@index([createdBy])
+  @@index([category])
+  @@index([deletedAt])
+  @@map("EmailTemplate")
+}
+
+// Video Conferencing Models
+model VideoMeeting {
+  id           String    @id @default(uuid())
+  title        String
+  description  String?
+  type         String // INSTANT, SCHEDULED, RECURRING, WEBINAR
+  status       String    @default("SCHEDULED") // SCHEDULED, ACTIVE, ENDED, CANCELLED
+  meetingId    String    @unique
+  password     String?
+  startTime    DateTime?
+  endTime      DateTime?
+  duration     Int       @default(60) // in minutes
+  timezone     String    @default("UTC")
+  joinUrl      String
+  hostUrl      String
+  participants Json      @default("[]")
+  recurrence   Json?
+  settings     Json      @default("{}")
+  metadata     Json?     @default("{}")
+  tags         String[]  @default([])
+  agenda       String?
+  recordingUrl String?
+  tenantId     String
+  hostId       String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  tenant              Tenant                 @relation(fields: [tenantId], references: [id])
+  host                User                   @relation("VideoMeetingHost", fields: [hostId], references: [id])
+  breakoutRooms       BreakoutRoom[]
+  recordings          MeetingRecording[]
+  meetingParticipants MeetingParticipant[]
+  chatMessages        MeetingChatMessage[]
+  polls               MeetingPoll[]
+  qualityMetrics      MeetingQualityMetric[]
+
+  @@index([tenantId])
+  @@index([hostId])
+  @@index([status])
+  @@index([startTime])
+  @@index([meetingId])
+  @@map("VideoMeeting")
+}
+
+model BreakoutRoom {
+  id           String   @id @default(uuid())
+  name         String
+  meetingId    String
+  participants String[]
+  isActive     Boolean  @default(false)
+  tenantId     String
+  createdBy    String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  meeting VideoMeeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  tenant  Tenant       @relation(fields: [tenantId], references: [id])
+  creator User         @relation("BreakoutRoomCreator", fields: [createdBy], references: [id])
+
+  @@index([meetingId])
+  @@index([tenantId])
+  @@index([createdBy])
+  @@map("BreakoutRoom")
+}
+
+model MeetingRecording {
+  id          String   @id @default(uuid())
+  meetingId   String
+  filename    String
+  url         String
+  size        Int      @default(0)
+  duration    Int      @default(0) // in seconds
+  format      String   @default("mp4")
+  isProcessed Boolean  @default(false)
+  tenantId    String
+  createdAt   DateTime @default(now())
+
+  meeting VideoMeeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  tenant  Tenant       @relation(fields: [tenantId], references: [id])
+
+  @@index([meetingId])
+  @@index([tenantId])
+  @@index([createdAt])
+  @@map("MeetingRecording")
+}
+
+// Remote Desktop Access Models
+model RemoteSession {
+  id                   String    @id @default(uuid())
+  name                 String
+  description          String?
+  type                 String // RDP, VNC, SSH, VDI
+  status               String    @default("PENDING") // PENDING, CONNECTING, ACTIVE, DISCONNECTED, TERMINATED, ERROR
+  sessionId            String    @unique
+  targetHost           String?
+  targetPort           Int?
+  username             String?
+  operatingSystem      String? // WINDOWS_10, UBUNTU_20_04, etc.
+  instanceSize         String? // SMALL, MEDIUM, LARGE, XLARGE
+  duration             Int       @default(480) // in minutes
+  connectionUrl        String
+  vncPort              Int?
+  rdpPort              Int?
+  sshPort              Int?
+  settings             Json      @default("{}")
+  allowedUsers         String[]  @default([])
+  tags                 String[]  @default([])
+  applications         String[]  @default([])
+  environmentVariables Json      @default("{}")
+  securitySettings     Json      @default("{}")
+  containerId          String?
+  instanceId           String?
+  recordingUrl         String?
+  startedAt            DateTime?
+  endedAt              DateTime?
+  lastAccessedAt       DateTime?
+  tenantId             String
+  userId               String
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  tenant      Tenant              @relation(fields: [tenantId], references: [id])
+  user        User                @relation("RemoteSessionUser", fields: [userId], references: [id])
+  permissions SessionPermission[]
+  recordings  SessionRecording[]
+  metrics     SessionMetric[]
+
+  @@index([tenantId])
+  @@index([userId])
+  @@index([status])
+  @@index([type])
+  @@index([sessionId])
+  @@index([startedAt])
+  @@map("RemoteSession")
+}
+
+model Ticket {
+  id          String     @id
+  subject     String
+  description String
+  status      String     @default("OPEN")
+  tenantId    String
+  userId      String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime
+  AuditLog    AuditLog[]
+  tenants     Tenant     @relation(fields: [tenantId], references: [id])
+  users       User?      @relation(fields: [userId], references: [id])
+}
+
+model UserRole {
+  userId    String
+  roleId    String
+  tenantId  String
+  createdAt DateTime @default(now())
+  roles     Role     @relation(fields: [roleId], references: [id])
+  tenants   Tenant   @relation(fields: [tenantId], references: [id])
+  users     User     @relation(fields: [userId], references: [id])
+
+  @@id([userId, roleId, tenantId])
+  @@unique([userId, roleId], name: "userId_roleId")
+}
+
+model accounts {
+  id               String        @id
+  unitId           String        @unique
+  customerId       String
+  type             AccountType
+  status           AccountStatus @default(OPEN)
+  balance          Float         @default(0)
+  availableBalance Float         @default(0)
+  currency         String        @default("USD")
+  routingNumber    String?
+  accountNumber    String?
+  tenantId         String
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime
+  customers        Customer      @relation(fields: [customerId], references: [id])
+  tenants          Tenant        @relation(fields: [tenantId], references: [id])
+  cards            cards[]
+  payments         payments[]
+  transactions     Transaction[]
+
+  @@index([customerId])
+  @@index([status])
+  @@index([tenantId])
+}
+
+model ai_models {
+  id             String           @id
+  tenantId       String
+  name           String
+  description    String?
+  type           String
+  provider       String
+  modelId        String
+  version        String?
+  configuration  Json
+  isActive       Boolean          @default(true)
+  trainingData   Json?
+  performance    Json?
+  lastTrainedAt  DateTime?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime
+  tenants        Tenant           @relation(fields: [tenantId], references: [id])
+  ai_predictions ai_predictions[]
+}
+
+model ai_predictions {
+  id             String    @id
+  tenantId       String
+  modelId        String
+  input          Json
+  output         Json
+  confidence     Decimal?  @db.Decimal(5, 4)
+  processingTime Int?
+  userId         String?
+  createdAt      DateTime  @default(now())
+  ai_models      ai_models @relation(fields: [modelId], references: [id])
+  tenants        Tenant    @relation(fields: [tenantId], references: [id])
+  users          User?     @relation(fields: [userId], references: [id])
+}
+
+model alert_rules {
+  id          String   @id
+  tenantId    String?
+  name        String
+  description String?
+  metric      String
+  condition   String
+  threshold   Float
+  duration    Int
+  severity    String   @default("info")
+  enabled     Boolean  @default(true)
+  definition  Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  tenants     Tenant?  @relation(fields: [tenantId], references: [id])
+  alerts      alerts[]
+
+  @@index([tenantId])
+  @@index([metric])
+  @@index([enabled])
+}
+
+model alerts {
+  id                                   String      @id
+  tenantId                             String
+  ruleId                               String
+  status                               String      @default("OPEN")
+  message                              String
+  severity                             String
+  triggeredAt                          DateTime    @default(now())
+  acknowledgedAt                       DateTime?
+  acknowledgedById                     String?
+  resolvedAt                           DateTime?
+  resolvedById                         String?
+  users_alerts_acknowledgedByIdTousers User?       @relation("alerts_acknowledgedByIdTousers", fields: [acknowledgedById], references: [id])
+  users_alerts_resolvedByIdTousers     User?       @relation("alerts_resolvedByIdTousers", fields: [resolvedById], references: [id])
+  alert_rules                          alert_rules @relation(fields: [ruleId], references: [id])
+  tenants                              Tenant      @relation(fields: [tenantId], references: [id])
+}
+
+model assets {
+  id                  String                @id
+  tenantId            String
+  assetNumber         String                @unique
+  name                String
+  description         String?
+  category            String
+  type                String
+  status              String                @default("ACTIVE")
+  location            String?
+  purchaseDate        DateTime?
+  purchasePrice       Decimal?              @db.Decimal(15, 2)
+  currentValue        Decimal?              @db.Decimal(15, 2)
+  currency            String                @default("USD")
+  depreciationMethod  String?
+  usefulLife          Int?
+  warrantyExpiry      DateTime?
+  lastMaintenanceDate DateTime?
+  nextMaintenanceDate DateTime?
+  assignedToId        String?
+  supplierId          String?
+  serialNumber        String?
+  model               String?
+  manufacturer        String?
+  specifications      Json?
+  documents           Json?
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime
+  users               User?                 @relation(fields: [assignedToId], references: [id])
+  suppliers           suppliers?            @relation(fields: [supplierId], references: [id])
+  tenants             Tenant                @relation(fields: [tenantId], references: [id])
+  maintenance_records maintenance_records[]
+}
+
+model banking_accounts {
+  id               String               @id
+  unitId           String               @unique
+  customerId       String
+  type             BankingAccountType
+  status           BankingAccountStatus @default(OPEN)
+  balance          Float                @default(0)
+  availableBalance Float                @default(0)
+  currency         String               @default("USD")
+  routingNumber    String?
+  accountNumber    String?
+  tenantId         String
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime
+  tenants          Tenant               @relation(fields: [tenantId], references: [id])
+
+  @@index([customerId])
+  @@index([status])
+  @@index([tenantId])
+}
+
+model broker_credentials {
+  id        String   @id
+  tenantId  String
+  provider  String
+  label     String?
+  apiKey    String?
+  apiSecret String?
+  accountId String?
+  extra     Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  tenants   Tenant   @relation(fields: [tenantId], references: [id])
+
+  @@index([tenantId])
+}
+
+model cards {
+  id              String     @id
+  unitId          String     @unique
+  customerId      String
+  accountId       String?
+  type            CardType
+  status          CardStatus @default(INACTIVE)
+  last4Digits     String?
+  expirationMonth String?
+  expirationYear  String?
+  limits          Json?
+  tags            Json?
+  tenantId        String
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime
+  accounts        accounts?  @relation(fields: [accountId], references: [id])
+  customers       Customer   @relation(fields: [customerId], references: [id])
+  tenants         Tenant     @relation(fields: [tenantId], references: [id])
+
+  @@index([customerId])
+  @@index([status])
+  @@index([tenantId])
+}
+
+model chart_of_accounts {
+  id                      String                @id
+  tenantId                String
+  accountCode             String
+  accountName             String
+  accountType             String
+  parentAccountId         String?
+  isActive                Boolean               @default(true)
+  description             String?
+  createdAt               DateTime              @default(now())
+  updatedAt               DateTime
+  chart_of_accounts       chart_of_accounts?    @relation("chart_of_accountsTochart_of_accounts", fields: [parentAccountId], references: [id])
+  other_chart_of_accounts chart_of_accounts[]   @relation("chart_of_accountsTochart_of_accounts")
+  tenants                 Tenant                @relation(fields: [tenantId], references: [id])
+  journal_entry_lines     journal_entry_lines[]
+
+  @@unique([tenantId, accountCode])
+}
+
+model chat_messages {
+  id                  String          @id
+  roomId              String
+  userId              String
+  content             String
+  type                String          @default("TEXT")
+  metadata            Json?
+  replyToId           String?
+  editedAt            DateTime?
+  deletedAt           DateTime?
+  createdAt           DateTime        @default(now())
+  chat_messages       chat_messages?  @relation("chat_messagesTochat_messages", fields: [replyToId], references: [id])
+  other_chat_messages chat_messages[] @relation("chat_messagesTochat_messages")
+  chat_rooms          chat_rooms      @relation(fields: [roomId], references: [id])
+  users               User            @relation(fields: [userId], references: [id])
+}
+
+model chat_room_members {
+  id         String     @id
+  roomId     String
+  userId     String
+  role       String     @default("MEMBER")
+  joinedAt   DateTime   @default(now())
+  lastReadAt DateTime?
+  chat_rooms chat_rooms @relation(fields: [roomId], references: [id])
+  users      User       @relation(fields: [userId], references: [id])
+
+  @@unique([roomId, userId])
+}
+
+model chat_rooms {
+  id                String              @id
+  tenantId          String
+  name              String
+  description       String?
+  type              String              @default("GROUP")
+  isPrivate         Boolean             @default(false)
+  createdById       String
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime
+  chat_messages     chat_messages[]
+  chat_room_members chat_room_members[]
+  users             User                @relation(fields: [createdById], references: [id])
+  tenants           Tenant              @relation(fields: [tenantId], references: [id])
+}
+
+model commission_schedules {
+  id          String   @id
+  tenantId    String
+  provider    String
+  assetClass  String
+  method      String
+  value       Decimal
+  currency    String
+  effectiveAt DateTime
+  createdAt   DateTime @default(now())
+  tenants     Tenant   @relation(fields: [tenantId], references: [id])
+
+  @@index([tenantId])
+}
+
+model compliance_assessments {
+  id                    String                @id
+  tenantId              String
+  frameworkId           String
+  name                  String
+  description           String?
+  status                String                @default("PLANNED")
+  assessorId            String?
+  plannedDate           DateTime
+  completedDate         DateTime?
+  score                 Int?
+  findings              Json?
+  recommendations       Json?
+  actionPlan            Json?
+  nextAssessmentDate    DateTime?
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime
+  users                 User?                 @relation(fields: [assessorId], references: [id])
+  compliance_frameworks compliance_frameworks @relation(fields: [frameworkId], references: [id])
+  tenants               Tenant                @relation(fields: [tenantId], references: [id])
+}
+
+model compliance_frameworks {
+  id                     String                   @id
+  tenantId               String
+  name                   String
+  description            String?
+  type                   String
+  version                String
+  effectiveDate          DateTime
+  requirements           Json
+  isActive               Boolean                  @default(true)
+  createdAt              DateTime                 @default(now())
+  updatedAt              DateTime
+  compliance_assessments compliance_assessments[]
+  tenants                Tenant                   @relation(fields: [tenantId], references: [id])
+}
+
+model crm_activities {
+  id           String       @id
+  tenantId     String
+  contactId    String
+  userId       String
+  type         String
+  subject      String
+  description  String?
+  status       String       @default("PENDING")
+  priority     String       @default("MEDIUM")
+  scheduledAt  DateTime?
+  completedAt  DateTime?
+  duration     Int?
+  outcome      String?
+  nextAction   String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime
+  crm_contacts crm_contacts @relation(fields: [contactId], references: [id])
+  tenants      Tenant       @relation(fields: [tenantId], references: [id])
+  users        User         @relation(fields: [userId], references: [id])
+}
+
+model crm_contacts {
+  id                String              @id
+  tenantId          String
+  firstName         String
+  lastName          String
+  email             String
+  phone             String?
+  company           String?
+  position          String?
+  leadScore         Int                 @default(0)
+  lifecycle         String              @default("LEAD")
+  source            String?
+  tags              String[]
+  customFields      Json?
+  lastContactDate   DateTime?
+  nextFollowUp      DateTime?
+  assignedUserId    String?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime
+  crm_activities    crm_activities[]
+  users             User?               @relation(fields: [assignedUserId], references: [id])
+  tenants           Tenant              @relation(fields: [tenantId], references: [id])
+  crm_opportunities crm_opportunities[]
+  projects          projects[]
+}
+
+model crm_opportunities {
+  id                String       @id
+  tenantId          String
+  contactId         String
+  name              String
+  description       String?
+  value             Decimal      @db.Decimal(15, 2)
+  currency          String       @default("USD")
+  stage             String       @default("PROSPECTING")
+  probability       Int          @default(10)
+  expectedCloseDate DateTime?
+  actualCloseDate   DateTime?
+  source            String?
+  competitorInfo    String?
+  lossReason        String?
+  assignedUserId    String?
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime
+  users             User?        @relation(fields: [assignedUserId], references: [id])
+  crm_contacts      crm_contacts @relation(fields: [contactId], references: [id])
+  tenants           Tenant       @relation(fields: [tenantId], references: [id])
+}
+
+model document_folders {
+  id                     String             @id
+  tenantId               String
+  name                   String
+  description            String?
+  parentFolderId         String?
+  path                   String
+  isPublic               Boolean            @default(false)
+  createdById            String
+  createdAt              DateTime           @default(now())
+  updatedAt              DateTime
+  users                  User               @relation(fields: [createdById], references: [id])
+  document_folders       document_folders?  @relation("document_foldersTodocument_folders", fields: [parentFolderId], references: [id])
+  other_document_folders document_folders[] @relation("document_foldersTodocument_folders")
+  tenants                Tenant             @relation(fields: [tenantId], references: [id])
+  documents              documents[]
+}
+
+model document_permissions {
+  id                                            String    @id
+  documentId                                    String
+  userId                                        String?
+  roleId                                        String?
+  permission                                    String
+  grantedById                                   String
+  grantedAt                                     DateTime  @default(now())
+  expiresAt                                     DateTime?
+  tenantId                                      String?
+  documents                                     documents @relation(fields: [documentId], references: [id])
+  users_document_permissions_grantedByIdTousers User      @relation("document_permissions_grantedByIdTousers", fields: [grantedById], references: [id])
+  roles                                         Role?     @relation(fields: [roleId], references: [id])
+  users_document_permissions_userIdTousers      User?     @relation("document_permissions_userIdTousers", fields: [userId], references: [id])
+  tenant                                        Tenant?   @relation(fields: [tenantId], references: [id])
+}
+
+model document_versions {
+  id           String    @id
+  documentId   String
+  version      String
+  fileName     String
+  filePath     String
+  fileSize     BigInt
+  checksum     String?
+  changeLog    String?
+  uploadedById String
+  createdAt    DateTime  @default(now())
+  documents    documents @relation(fields: [documentId], references: [id])
+  users        User      @relation(fields: [uploadedById], references: [id])
+}
+
+model documents {
+  id                   String                 @id
+  tenantId             String
+  name                 String
+  description          String?
+  fileName             String
+  filePath             String
+  fileSize             BigInt
+  mimeType             String
+  version              String                 @default("1.0")
+  status               String                 @default("DRAFT")
+  category             String?
+  tags                 String[]
+  metadata             Json?
+  uploadedById         String
+  folderId             String?
+  isPublic             Boolean                @default(false)
+  downloadCount        Int                    @default(0)
+  lastAccessedAt       DateTime?
+  expiresAt            DateTime?
+  checksum             String?
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime
+  document_permissions document_permissions[]
+  document_versions    document_versions[]
+  document_folders     document_folders?      @relation(fields: [folderId], references: [id])
+  tenants              Tenant                 @relation(fields: [tenantId], references: [id])
+  users                User                   @relation(fields: [uploadedById], references: [id])
+}
+
+model employees {
+  id                  String                @id
+  tenantId            String
+  userId              String                @unique
+  employeeNumber      String                @unique
+  firstName           String
+  lastName            String
+  email               String                @unique
+  phone               String?
+  dateOfBirth         DateTime?
+  hireDate            DateTime
+  terminationDate     DateTime?
+  status              String                @default("ACTIVE")
+  department          String?
+  position            String?
+  managerId           String?
+  salary              Decimal?              @db.Decimal(15, 2)
+  currency            String                @default("USD")
+  payrollFrequency    String?
+  address             Json?
+  emergencyContact    Json?
+  benefits            Json?
+  documents           Json?
+  notes               String?
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime
+  employees           employees?            @relation("employeesToemployees", fields: [managerId], references: [id])
+  other_employees     employees[]           @relation("employeesToemployees")
+  tenants             Tenant                @relation(fields: [tenantId], references: [id])
+  users               User                  @relation(fields: [userId], references: [id])
+  leave_requests      leave_requests[]
+  performance_reviews performance_reviews[]
+}
+
+model erp_modules {
+  id            String   @id
+  tenantId      String
+  moduleType    String
+  configuration Json
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime
+  tenants       Tenant   @relation(fields: [tenantId], references: [id])
+}
+
+model executions {
+  id            String   @id
+  tenantId      String
+  provider      String
+  brokerOrderId String?
+  localOrderId  String?
+  symbol        String
+  conid         String?
+  instrument    String?
+  side          String
+  quantity      Decimal
+  price         Decimal
+  gross         Decimal
+  commission    Decimal
+  markup        Decimal
+  net           Decimal
+  status        String   @default("pending")
+  executedQuantity Decimal @default(0)
+  executedPrice  Decimal   @default(0)
+  executedAt     DateTime  @default(now())
+  metadata       Json?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  raw           Json?
+  tenants       Tenant   @relation(fields: [tenantId], references: [id])
+
+  @@index([tenantId])
+}
+
+model generated_reports {
+  id               String           @id
+  tenantId         String
+  templateId       String
+  name             String
+  parameters       Json?
+  data             Json
+  format           String           @default("JSON")
+  filePath         String?
+  status           String           @default("COMPLETED")
+  generatedById    String
+  generatedAt      DateTime         @default(now())
+  expiresAt        DateTime?
+  users            User             @relation(fields: [generatedById], references: [id])
+  report_templates report_templates @relation(fields: [templateId], references: [id])
+  tenants          Tenant           @relation(fields: [tenantId], references: [id])
+}
+
+model integration_syncs {
+  id               String       @id
+  integrationId    String
+  status           String
+  recordsProcessed Int          @default(0)
+  recordsSucceeded Int          @default(0)
+  recordsFailed    Int          @default(0)
+  startedAt        DateTime     @default(now())
+  completedAt      DateTime?
+  errorMessage     String?
+  details          Json?
+  integrations     integrations @relation(fields: [integrationId], references: [id])
+}
+
+model integrations {
+  id                String              @id
+  tenantId          String
+  name              String
+  description       String?
+  type              String
+  provider          String
+  configuration     Json
+  credentials       Json
+  isActive          Boolean             @default(true)
+  lastSyncAt        DateTime?
+  syncFrequency     String?
+  errorCount        Int                 @default(0)
+  lastError         String?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime
+  integration_syncs integration_syncs[]
+  tenants           Tenant              @relation(fields: [tenantId], references: [id])
+}
+
+model inventory_items {
+  id                   String                 @id
+  tenantId             String
+  sku                  String                 @unique
+  name                 String
+  description          String?
+  category             String?
+  brand                String?
+  unitOfMeasure        String                 @default("EACH")
+  currentStock         Decimal                @db.Decimal(15, 3)
+  minimumStock         Decimal                @default(0) @db.Decimal(15, 3)
+  maximumStock         Decimal?               @db.Decimal(15, 3)
+  reorderPoint         Decimal                @default(0) @db.Decimal(15, 3)
+  reorderQuantity      Decimal                @default(0) @db.Decimal(15, 3)
+  unitCost             Decimal                @default(0) @db.Decimal(15, 2)
+  unitPrice            Decimal                @default(0) @db.Decimal(15, 2)
+  currency             String                 @default("USD")
+  location             String?
+  barcode              String?
+  isActive             Boolean                @default(true)
+  isTrackable          Boolean                @default(true)
+  tags                 String[]
+  customFields         Json?
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime
+  tenants              Tenant                 @relation(fields: [tenantId], references: [id])
+  inventory_movements  inventory_movements[]
+  purchase_order_lines purchase_order_lines[]
+  stock_levels         stock_levels[]
+}
+
+model inventory_movements {
+  id              String          @id
+  tenantId        String
+  itemId          String
+  type            String
+  quantity        Decimal         @db.Decimal(15, 3)
+  unitCost        Decimal?        @db.Decimal(15, 2)
+  totalCost       Decimal?        @db.Decimal(15, 2)
+  currency        String          @default("USD")
+  reason          String?
+  referenceNumber String?
+  fromLocation    String?
+  toLocation      String?
+  userId          String
+  notes           String?
+  createdAt       DateTime        @default(now())
+  inventory_items inventory_items @relation(fields: [itemId], references: [id])
+  tenants         Tenant          @relation(fields: [tenantId], references: [id])
+  users           User            @relation(fields: [userId], references: [id])
+}
+
+model journal_entries {
+  id                                        String                @id
+  tenantId                                  String
+  entryNumber                               String
+  date                                      DateTime
+  description                               String
+  reference                                 String?
+  totalDebit                                Decimal               @db.Decimal(15, 2)
+  totalCredit                               Decimal               @db.Decimal(15, 2)
+  currency                                  String                @default("USD")
+  status                                    String                @default("DRAFT")
+  createdById                               String
+  approvedById                              String?
+  approvedAt                                DateTime?
+  createdAt                                 DateTime              @default(now())
+  updatedAt                                 DateTime
+  users_journal_entries_approvedByIdTousers User?                 @relation("journal_entries_approvedByIdTousers", fields: [approvedById], references: [id])
+  users_journal_entries_createdByIdTousers  User                  @relation("journal_entries_createdByIdTousers", fields: [createdById], references: [id])
+  tenants                                   Tenant                @relation(fields: [tenantId], references: [id])
+  journal_entry_lines                       journal_entry_lines[]
+
+  @@unique([tenantId, entryNumber])
+}
+
+model journal_entry_lines {
+  id                String            @id
+  journalEntryId    String
+  accountId         String
+  description       String?
+  debitAmount       Decimal           @default(0) @db.Decimal(15, 2)
+  creditAmount      Decimal           @default(0) @db.Decimal(15, 2)
+  currency          String            @default("USD")
+  chart_of_accounts chart_of_accounts @relation(fields: [accountId], references: [id])
+  journal_entries   journal_entries   @relation(fields: [journalEntryId], references: [id])
+}
+
+model leave_requests {
+  id              String    @id
+  tenantId        String
+  employeeId      String
+  type            String
+  startDate       DateTime
+  endDate         DateTime
+  days            Decimal   @db.Decimal(5, 2)
+  reason          String?
+  status          String    @default("PENDING")
+  approvedById    String?
+  approvedAt      DateTime?
+  rejectionReason String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime
+  users           User?     @relation(fields: [approvedById], references: [id])
+  employees       employees @relation(fields: [employeeId], references: [id])
+  tenants         Tenant    @relation(fields: [tenantId], references: [id])
+}
+
+model maintenance_records {
+  id                  String     @id
+  tenantId            String
+  assetId             String
+  type                String
+  description         String
+  scheduledDate       DateTime?
+  completedDate       DateTime?
+  cost                Decimal?   @db.Decimal(15, 2)
+  currency            String     @default("USD")
+  performedById       String?
+  supplierId          String?
+  status              String     @default("SCHEDULED")
+  notes               String?
+  nextMaintenanceDate DateTime?
+  createdAt           DateTime   @default(now())
+  updatedAt           DateTime
+  assets              assets     @relation(fields: [assetId], references: [id])
+  users               User?      @relation(fields: [performedById], references: [id])
+  suppliers           suppliers? @relation(fields: [supplierId], references: [id])
+  tenants             Tenant     @relation(fields: [tenantId], references: [id])
+}
+
+model payments {
+  id           String           @id
+  unitId       String           @unique
+  customerId   String?
+  accountId    String?
+  type         PaymentType
+  direction    PaymentDirection
+  amount       Float
+  description  String?
+  counterparty Json?
+  status       PaymentStatus    @default(PENDING)
+  tags         Json?
+  tenantId     String
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime
+  accounts     accounts?        @relation(fields: [accountId], references: [id])
+  customers    Customer?        @relation(fields: [customerId], references: [id])
+  tenants      Tenant           @relation(fields: [tenantId], references: [id])
+
+  @@index([accountId])
+  @@index([customerId])
+  @@index([status])
+  @@index([tenantId])
+}
+
+model performance_reviews {
+  id                  String    @id
+  tenantId            String
+  employeeId          String
+  reviewerId          String
+  period              String
+  type                String    @default("ANNUAL")
+  status              String    @default("DRAFT")
+  overallRating       Int?
+  goals               Json?
+  achievements        Json?
+  areasForImprovement Json?
+  feedback            String?
+  employeeComments    String?
+  nextReviewDate      DateTime?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime
+  employees           employees @relation(fields: [employeeId], references: [id])
+  users               User      @relation(fields: [reviewerId], references: [id])
+  tenants             Tenant    @relation(fields: [tenantId], references: [id])
+}
+
+model project_resources {
+  id         String    @id
+  tenantId   String
+  projectId  String
+  userId     String
+  role       String
+  allocation Int       @default(100)
+  hourlyRate Decimal?  @db.Decimal(10, 2)
+  currency   String    @default("USD")
+  startDate  DateTime
+  endDate    DateTime?
+  isActive   Boolean   @default(true)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime
+  projects   projects  @relation(fields: [projectId], references: [id])
+  tenants    Tenant    @relation(fields: [tenantId], references: [id])
+  users      User      @relation(fields: [userId], references: [id])
+}
+
+model project_tasks {
+  id                  String          @id
+  tenantId            String
+  projectId           String
+  parentTaskId        String?
+  name                String
+  description         String?
+  status              String          @default("TODO")
+  priority            String          @default("MEDIUM")
+  estimatedHours      Decimal?        @db.Decimal(8, 2)
+  actualHours         Decimal?        @db.Decimal(8, 2)
+  startDate           DateTime?
+  dueDate             DateTime?
+  completedDate       DateTime?
+  assigneeId          String?
+  progress            Int             @default(0)
+  tags                String[]
+  dependencies        String[]
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime
+  users               User?           @relation(fields: [assigneeId], references: [id])
+  project_tasks       project_tasks?  @relation("project_tasksToproject_tasks", fields: [parentTaskId], references: [id])
+  other_project_tasks project_tasks[] @relation("project_tasksToproject_tasks")
+  projects            projects        @relation(fields: [projectId], references: [id])
+  tenants             Tenant          @relation(fields: [tenantId], references: [id])
+  time_entries        time_entries[]
+}
+
+model projects {
+  id                String              @id
+  tenantId          String
+  name              String
+  description       String?
+  status            String              @default("PLANNING")
+  priority          String              @default("MEDIUM")
+  startDate         DateTime?
+  endDate           DateTime?
+  actualStartDate   DateTime?
+  actualEndDate     DateTime?
+  budget            Decimal?            @db.Decimal(15, 2)
+  actualCost        Decimal?            @db.Decimal(15, 2)
+  currency          String              @default("USD")
+  progress          Int                 @default(0)
+  managerId         String?
+  clientId          String?
+  tags              String[]
+  customFields      Json?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime
+  project_resources project_resources[]
+  project_tasks     project_tasks[]
+  crm_contacts      crm_contacts?       @relation(fields: [clientId], references: [id])
+  users             User?               @relation(fields: [managerId], references: [id])
+  tenants           Tenant              @relation(fields: [tenantId], references: [id])
+  time_entries      time_entries[]
+}
+
+model purchase_order_lines {
+  id               String           @id
+  purchaseOrderId  String
+  itemId           String?
+  description      String
+  quantity         Decimal          @db.Decimal(15, 3)
+  unitPrice        Decimal          @db.Decimal(15, 2)
+  totalPrice       Decimal          @db.Decimal(15, 2)
+  receivedQuantity Decimal          @default(0) @db.Decimal(15, 3)
+  inventory_items  inventory_items? @relation(fields: [itemId], references: [id])
+  purchase_orders  purchase_orders  @relation(fields: [purchaseOrderId], references: [id])
+}
+
+model purchase_orders {
+  id                                        String                 @id
+  tenantId                                  String
+  orderNumber                               String                 @unique
+  supplierId                                String
+  status                                    String                 @default("DRAFT")
+  orderDate                                 DateTime
+  expectedDate                              DateTime?
+  receivedDate                              DateTime?
+  subtotal                                  Decimal                @db.Decimal(15, 2)
+  taxAmount                                 Decimal                @default(0) @db.Decimal(15, 2)
+  totalAmount                               Decimal                @db.Decimal(15, 2)
+  currency                                  String                 @default("USD")
+  notes                                     String?
+  createdById                               String
+  approvedById                              String?
+  approvedAt                                DateTime?
+  createdAt                                 DateTime               @default(now())
+  updatedAt                                 DateTime
+  purchase_order_lines                      purchase_order_lines[]
+  users_purchase_orders_approvedByIdTousers User?                  @relation("purchase_orders_approvedByIdTousers", fields: [approvedById], references: [id])
+  users_purchase_orders_createdByIdTousers  User                   @relation("purchase_orders_createdByIdTousers", fields: [createdById], references: [id])
+  suppliers                                 suppliers              @relation(fields: [supplierId], references: [id])
+  tenants                                   Tenant                 @relation(fields: [tenantId], references: [id])
+}
+
+model quality_audits {
+  id                String            @id
+  tenantId          String
+  standardId        String
+  name              String
+  description       String?
+  type              String            @default("INTERNAL")
+  status            String            @default("PLANNED")
+  plannedDate       DateTime
+  actualDate        DateTime?
+  auditorId         String?
+  findings          Json?
+  recommendations   Json?
+  score             Int?
+  certificateNumber String?
+  certificateExpiry DateTime?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime
+  users             User?             @relation(fields: [auditorId], references: [id])
+  quality_standards quality_standards @relation(fields: [standardId], references: [id])
+  tenants           Tenant            @relation(fields: [tenantId], references: [id])
+}
+
+model quality_standards {
+  id             String           @id
+  tenantId       String
+  name           String
+  description    String?
+  standard       String
+  version        String
+  requirements   Json
+  isActive       Boolean          @default(true)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime
+  quality_audits quality_audits[]
+  tenants        Tenant           @relation(fields: [tenantId], references: [id])
+}
+
+model rebate_ledgers {
+  id           String    @id
+  tenantId     String
+  provider     String
+  accountId    String
+  instrument   String
+  volumeLots   Decimal
+  rebatePerLot Decimal
+  rebateCcy    String
+  rebateAmount Decimal
+  tradeRef     String?
+  settledAt    DateTime?
+  createdAt    DateTime  @default(now())
+  tenants      Tenant    @relation(fields: [tenantId], references: [id])
+
+  @@index([tenantId])
+}
+
+model report_templates {
+  id                String              @id
+  tenantId          String
+  name              String
+  description       String?
+  category          String
+  type              String
+  query             Json
+  layout            Json
+  parameters        Json?
+  isPublic          Boolean             @default(false)
+  createdById       String
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime
+  generated_reports generated_reports[]
+  users             User                @relation(fields: [createdById], references: [id])
+  tenants           Tenant              @relation(fields: [tenantId], references: [id])
+}
+
+model risk_assessments {
+  id              String          @id
+  tenantId        String
+  name            String
+  description     String?
+  category        String
+  probability     Int
+  impact          Int
+  riskScore       Int
+  status          String          @default("IDENTIFIED")
+  ownerId         String?
+  mitigationPlan  String?
+  contingencyPlan String?
+  reviewDate      DateTime?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime
+  users           User?           @relation(fields: [ownerId], references: [id])
+  tenants         Tenant          @relation(fields: [tenantId], references: [id])
+  risk_controls   risk_controls[]
+}
+
+model risk_controls {
+  id                 String           @id
+  riskAssessmentId   String
+  name               String
+  description        String?
+  type               String
+  effectiveness      String           @default("MEDIUM")
+  implementationDate DateTime?
+  reviewDate         DateTime?
+  ownerId            String?
+  status             String           @default("PLANNED")
+  testResults        String?
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime
+  users              User?            @relation(fields: [ownerId], references: [id])
+  risk_assessments   risk_assessments @relation(fields: [riskAssessmentId], references: [id])
+}
+
+model stock_levels {
+  id                String          @id
+  tenantId          String
+  itemId            String
+  location          String
+  quantity          Decimal         @db.Decimal(15, 3)
+  reservedQuantity  Decimal         @default(0) @db.Decimal(15, 3)
+  availableQuantity Decimal         @db.Decimal(15, 3)
+  lastUpdated       DateTime        @default(now())
+  inventory_items   inventory_items @relation(fields: [itemId], references: [id])
+  tenants           Tenant          @relation(fields: [tenantId], references: [id])
+
+  @@unique([itemId, location])
+}
+
+model suppliers {
+  id                  String                @id
+  tenantId            String
+  name                String
+  code                String                @unique
+  contactPerson       String?
+  email               String?
+  phone               String?
+  address             Json?
+  taxId               String?
+  paymentTerms        String?
+  currency            String                @default("USD")
+  rating              Int?
+  status              String                @default("ACTIVE")
+  certifications      String[]
+  notes               String?
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime
+  assets              assets[]
+  maintenance_records maintenance_records[]
+  purchase_orders     purchase_orders[]
+  tenants             Tenant                @relation(fields: [tenantId], references: [id])
+}
+
+model system_metrics {
+  id          String   @id
+  tenantId    String?
+  metricName  String
+  metricValue Decimal  @db.Decimal(15, 4)
+  unit        String?
+  tags        Json?
+  timestamp   DateTime @default(now())
+  tenants     Tenant?  @relation(fields: [tenantId], references: [id])
+}
+
+model time_entries {
+  id                                   String         @id
+  tenantId                             String
+  userId                               String
+  projectId                            String?
+  taskId                               String?
+  description                          String
+  hours                                Decimal        @db.Decimal(8, 2)
+  date                                 DateTime
+  billable                             Boolean        @default(true)
+  hourlyRate                           Decimal?       @db.Decimal(10, 2)
+  currency                             String         @default("USD")
+  status                               String         @default("DRAFT")
+  approvedBy                           String?
+  approvedAt                           DateTime?
+  createdAt                            DateTime       @default(now())
+  updatedAt                            DateTime
+  users_time_entries_approvedByTousers User?          @relation("time_entries_approvedByTousers", fields: [approvedBy], references: [id])
+  projects                             projects?      @relation(fields: [projectId], references: [id])
+  project_tasks                        project_tasks? @relation(fields: [taskId], references: [id])
+  tenants                              Tenant         @relation(fields: [tenantId], references: [id])
+  users_time_entries_userIdTousers     User           @relation("time_entries_userIdTousers", fields: [userId], references: [id])
+}
+
+enum CustomerType {
+  INDIVIDUAL
+  BUSINESS
+  TRUST
+}
+
+enum CustomerStatus {
+  PENDING
+  ACTIVE
+  SUSPENDED
+  CLOSED
+}
+
+enum AccountType {
+  DEPOSIT
+  CREDIT
+  BROKERAGE
+}
+
+enum TransactionType {
+  WIRE
+  ACH
+  BOOK
+  FEE
+  INTEREST
+  ATM
+  CHECK
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum AccountStatus {
+  OPEN
+  CLOSED
+  FROZEN
+}
+
+enum BankingAccountStatus {
+  OPEN
+  CLOSED
+  FROZEN
+  SUSPENDED
+}
+
+enum BankingAccountType {
+  CHECKING
+  SAVINGS
+  MONEY_MARKET
+  CD
+}
+
+enum CardStatus {
+  INACTIVE
+  ACTIVE
+  FROZEN
+  CLOSED
+}
+
+enum CardType {
+  DEBIT
+  CREDIT
+  PREPAID
+}
+
+enum KYCStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  REVIEW
+}
+
+enum PaymentDirection {
+  OUTGOING
+  INCOMING
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum PaymentType {
+  WIRE
+  ACH
+  BOOK
+  RTP
+  FEDNOW
+}
+
+enum SubscriptionPlan {
+  STARTER
+  PROFESSIONAL
+  ENTERPRISE
+  CUSTOM
+  ENTERPRISE_PLUS
+  FORTUNE_500
+}
+
+enum TenantStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  TRIAL
+  EXPIRED
+}
+
+enum TransactionDirection {
+  DEBIT
+  CREDIT
+}
+
+// Additional Enterprise Collaboration Models
+
+model CollaborationSession {
+  id           String    @id @default(uuid())
+  documentId   String
+  userId       String
+  isActive     Boolean   @default(true)
+  joinedAt     DateTime  @default(now())
+  leftAt       DateTime?
+  lastActivity DateTime  @default(now())
+  cursor       Json?
+  selection    Json?
+  expiresAt    DateTime?
+  tenantId     String
+
+  document OfficeDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  user     User           @relation(fields: [userId], references: [id])
+  tenant   Tenant         @relation(fields: [tenantId], references: [id])
+
+  @@unique([documentId, userId])
+  @@index([documentId])
+  @@index([userId])
+  @@index([isActive])
+  @@index([tenantId])
+  @@map("collaboration_sessions")
+}
+
+model CollaborationInvitation {
+  id         String    @id @default(uuid())
+  documentId String
+  email      String
+  permission String
+  message    String?
+  expiresAt  DateTime?
+  acceptedAt DateTime?
+  tenantId   String
+  invitedBy  String
+  createdAt  DateTime  @default(now())
+
+  document OfficeDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  inviter  User           @relation(fields: [invitedBy], references: [id])
+  tenant   Tenant         @relation(fields: [tenantId], references: [id])
+
+  @@index([documentId])
+  @@index([email])
+  @@index([tenantId])
+  @@map("collaboration_invitations")
+}
+
+model DocumentActivity {
+  id         String   @id @default(uuid())
+  documentId String
+  userId     String
+  action     String
+  details    Json?
+  tenantId   String
+  createdAt  DateTime @default(now())
+
+  document OfficeDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  user     User           @relation(fields: [userId], references: [id])
+  tenant   Tenant         @relation(fields: [tenantId], references: [id])
+
+  @@index([documentId])
+  @@index([userId])
+  @@index([tenantId])
+  @@map("document_activities")
+}
+
+model DocumentChange {
+  id         String   @id @default(uuid())
+  documentId String
+  userId     String
+  changeType String
+  changes    Json
+  timestamp  DateTime @default(now())
+  tenantId   String
+
+  document OfficeDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  user     User           @relation(fields: [userId], references: [id])
+  tenant   Tenant         @relation(fields: [tenantId], references: [id])
+
+  @@index([documentId])
+  @@index([userId])
+  @@index([tenantId])
+  @@map("document_changes")
+}
+
+model MeetingParticipant {
+  id              String    @id @default(uuid())
+  meetingId       String
+  userId          String
+  role            String    @default("ATTENDEE") // HOST, CO_HOST, PRESENTER, ATTENDEE
+  joinedAt        DateTime?
+  leftAt          DateTime?
+  duration        Int       @default(0)
+  isMuted         Boolean   @default(false)
+  isVideoOn       Boolean   @default(true)
+  isScreenSharing Boolean   @default(false)
+  tenantId        String
+  metadata        Json?     @default("{}")
+  status          String   @default("ACTIVE")
+  displayName     String?
+
+  meeting VideoMeeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  user    User         @relation(fields: [userId], references: [id])
+  tenant  Tenant       @relation(fields: [tenantId], references: [id])
+
+  @@unique([meetingId, userId])
+  @@index([meetingId])
+  @@index([userId])
+  @@index([tenantId])
+  @@map("meeting_participants")
+}
+
+model MeetingChatMessage {
+  id          String   @id @default(uuid())
+  meetingId   String
+  userId      String
+  message     String
+  type        String   @default("TEXT") // TEXT, FILE, EMOJI, POLL
+  recipientId String?
+  metadata    Json?
+  tenantId    String
+  createdAt   DateTime @default(now())
+
+  meeting   VideoMeeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  user      User         @relation(fields: [userId], references: [id])
+  recipient User?        @relation("ChatMessageRecipient", fields: [recipientId], references: [id])
+  tenant    Tenant       @relation(fields: [tenantId], references: [id])
+
+  @@index([meetingId])
+  @@index([userId])
+  @@index([tenantId])
+  @@map("meeting_chat_messages")
+}
+
+model MeetingPoll {
+  id             String    @id @default(uuid())
+  meetingId      String
+  question       String
+  options        String[]  @default([])
+  multipleChoice Boolean   @default(false)
+  anonymous      Boolean   @default(false)
+  duration       Int?
+  isActive       Boolean   @default(true)
+  tenantId       String
+  createdBy      String
+  createdAt      DateTime  @default(now())
+  endsAt         DateTime?
+
+  meeting   VideoMeeting          @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  creator   User                  @relation(fields: [createdBy], references: [id])
+  tenant    Tenant                @relation(fields: [tenantId], references: [id])
+  responses MeetingPollResponse[]
+
+  @@index([meetingId])
+  @@index([createdBy])
+  @@index([tenantId])
+  @@map("meeting_polls")
+}
+
+model MeetingPollResponse {
+  id              String   @id @default(uuid())
+  pollId          String
+  userId          String
+  selectedOptions String[] @default([])
+  tenantId        String
+  createdAt       DateTime @default(now())
+
+  poll   MeetingPoll @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  user   User        @relation(fields: [userId], references: [id])
+  tenant Tenant      @relation(fields: [tenantId], references: [id])
+
+  @@unique([pollId, userId])
+  @@index([pollId])
+  @@index([userId])
+  @@index([tenantId])
+  @@map("meeting_poll_responses")
+}
+
+model MeetingQualityMetric {
+  id             String   @id @default(uuid())
+  meetingId      String
+  userId         String
+  audioQuality   Float?
+  videoQuality   Float?
+  networkLatency Float?
+  packetLoss     Float?
+  bandwidthUsage Float?
+  cpuUsage       Float?
+  memoryUsage    Float?
+  timestamp      DateTime @default(now())
+  tenantId       String
+
+  meeting VideoMeeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  user    User         @relation(fields: [userId], references: [id])
+  tenant  Tenant       @relation(fields: [tenantId], references: [id])
+
+  @@index([meetingId])
+  @@index([userId])
+  @@index([tenantId])
+  @@map("meeting_quality_metrics")
+}
+
+model EmailFilter {
+  id              String   @id @default(uuid())
+  name            String
+  description     String?
+  conditions      Json
+  logic           String   @default("AND") // AND, OR
+  actions         Json
+  priority        Int      @default(50)
+  isActive        Boolean  @default(true)
+  applyToExisting Boolean  @default(false)
+  tenantId        String
+  userId          String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id])
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+
+  @@index([userId])
+  @@index([tenantId])
+  @@index([isActive])
+  @@map("email_filters")
+}
+
+model EmailAttachment {
+  id                String   @id @default(uuid())
+  emailId           String?
+  enterpriseEmailId String?
+  filename          String
+  originalName      String
+  mimeType          String
+  size              Int
+  path              String
+  checksum          String?
+  isInline          Boolean  @default(false)
+  contentId         String?
+  tenantId          String
+  createdAt         DateTime @default(now())
+
+  email           Email?           @relation(fields: [emailId], references: [id], onDelete: Cascade)
+  enterpriseEmail EnterpriseEmail? @relation(fields: [enterpriseEmailId], references: [id], onDelete: Cascade)
+  tenant          Tenant           @relation(fields: [tenantId], references: [id])
+
+  @@index([emailId])
+  @@index([enterpriseEmailId])
+  @@index([tenantId])
+  @@map("email_attachments")
+}
+
+model EmailAccount {
+  id               String    @id @default(uuid())
+  name             String
+  email            String
+  displayName      String
+  imapSettings     Json
+  smtpSettings     Json
+  syncSettings     Json?
+  securitySettings Json?
+  isDefault        Boolean   @default(false)
+  isActive         Boolean   @default(true)
+  lastSync         DateTime?
+  tenantId         String
+  userId           String
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id])
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+
+  @@unique([userId, email])
+  @@index([userId])
+  @@index([tenantId])
+  @@map("email_accounts")
+}
+
+model EmailSignature {
+  id             String   @id @default(uuid())
+  name           String
+  content        String
+  textContent    String?
+  isDefault      Boolean  @default(false)
+  useForReplies  Boolean  @default(true)
+  useForForwards Boolean  @default(true)
+  tenantId       String
+  userId         String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id])
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+
+  @@index([userId])
+  @@index([tenantId])
+  @@map("email_signatures")
+}
+
+model BlockedSender {
+  id        String   @id @default(uuid())
+  email     String
+  reason    String?
+  tenantId  String
+  userId    String
+  createdAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id])
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+
+  @@unique([userId, email])
+  @@index([userId])
+  @@index([tenantId])
+  @@map("blocked_senders")
+}
+
+model SessionPermission {
+  id          String    @id @default(uuid())
+  sessionId   String
+  userId      String
+  accessLevel String    @default("VIEW_ONLY") // VIEW_ONLY, CONTROL, ADMIN
+  expiresAt   DateTime?
+  grantedBy   String
+  tenantId    String
+  createdAt   DateTime  @default(now())
+
+  session RemoteSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  user    User          @relation(fields: [userId], references: [id])
+  granter User          @relation("SessionPermissionGranter", fields: [grantedBy], references: [id])
+  tenant  Tenant        @relation(fields: [tenantId], references: [id])
+
+  @@unique([sessionId, userId])
+  @@index([sessionId])
+  @@index([userId])
+  @@index([tenantId])
+  @@map("session_permissions")
+}
+
+model SessionRecording {
+  id        String   @id @default(uuid())
+  sessionId String
+  filename  String
+  path      String
+  size      Int      @default(0)
+  duration  Int      @default(0)
+  format    String   @default("mp4")
+  status    String   @default("PROCESSING") // PROCESSING, READY, FAILED
+  tenantId  String
+  createdBy String
+  createdAt DateTime @default(now())
+
+  session RemoteSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  creator User          @relation(fields: [createdBy], references: [id])
+  tenant  Tenant        @relation(fields: [tenantId], references: [id])
+
+  @@index([sessionId])
+  @@index([createdBy])
+  @@index([tenantId])
+  @@map("session_recordings")
+}
+
+model SessionMetric {
+  id               String   @id @default(uuid())
+  sessionId        String
+  cpuUsage         Float?
+  memoryUsage      Float?
+  networkLatency   Float?
+  bandwidthUsage   Float?
+  screenResolution String?
+  frameRate        Float?
+  timestamp        DateTime @default(now())
+  tenantId         String
+
+  session RemoteSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  tenant  Tenant        @relation(fields: [tenantId], references: [id])
+
+  @@index([sessionId])
+  @@index([tenantId])
+  @@map("session_metrics")
+}
+
+model SessionTemplate {
+  id            String   @id @default(uuid())
+  name          String
+  description   String?
+  type          String
+  configuration Json
+  category      String?
+  isShared      Boolean  @default(false)
+  tags          String[] @default([])
+  tenantId      String
+  createdBy     String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  creator User   @relation(fields: [createdBy], references: [id])
+  tenant  Tenant @relation(fields: [tenantId], references: [id])
+
+  @@index([createdBy])
+  @@index([tenantId])
+  @@index([type])
+  @@map("session_templates")
+}
+
+// ===================================
+// POS (Point of Sale) Module
+// ===================================
+
+model PosProduct {
+  id          String   @id @default(uuid())
+  sku         String   @unique
+  name        String
+  description String?
+  category    String?
+  price       Decimal  @db.Decimal(10, 2)
+  cost        Decimal? @db.Decimal(10, 2)
+  barcode     String?  @unique
+  imageUrl    String?
+  isActive    Boolean  @default(true)
+  stockLevel  Int      @default(0)
+  minStock    Int      @default(0)
+  maxStock    Int?
+  unit        String   @default("unit") // unit, kg, liter, etc.
+  taxRate     Decimal? @db.Decimal(5, 4) // 0.1875 for 18.75%
+  tags        String[] @default([])
+  metadata    Json?
+  tenantId    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  tenant             Tenant                 @relation(fields: [tenantId], references: [id])
+  transactionItems   PosTransactionItem[]
+  inventoryMovements PosInventoryMovement[]
+
+  @@index([tenantId])
+  @@index([sku])
+  @@index([barcode])
+  @@index([category])
+  @@index([isActive])
+  @@map("pos_products")
+}
+
+model PosCustomer {
+  id            String    @id @default(uuid())
+  code          String?   @unique
+  name          String
+  email         String?
+  phone         String?
+  address       String?
+  city          String?
+  state         String?
+  zipCode       String?
+  country       String?
+  taxId         String?
+  isActive      Boolean   @default(true)
+  loyaltyPoints Int       @default(0)
+  totalSpent    Decimal   @default(0) @db.Decimal(12, 2)
+  lastVisit     DateTime?
+  notes         String?
+  metadata      Json?
+  tenantId      String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  tenant       Tenant           @relation(fields: [tenantId], references: [id])
+  transactions PosTransaction[]
+
+  @@index([tenantId])
+  @@index([code])
+  @@index([email])
+  @@index([phone])
+  @@index([isActive])
+  @@map("pos_customers")
+}
+
+model PosTransaction {
+  id             String    @id @default(uuid())
+  transactionNo  String    @unique
+  type           String    @default("SALE") // SALE, RETURN, VOID
+  status         String    @default("PENDING") // PENDING, COMPLETED, CANCELLED, REFUNDED
+  subtotal       Decimal   @db.Decimal(12, 2)
+  taxAmount      Decimal   @default(0) @db.Decimal(12, 2)
+  discountAmount Decimal   @default(0) @db.Decimal(12, 2)
+  totalAmount    Decimal   @db.Decimal(12, 2)
+  paidAmount     Decimal   @default(0) @db.Decimal(12, 2)
+  changeAmount   Decimal   @default(0) @db.Decimal(12, 2)
+  customerId     String?
+  customerName   String?
+  cashierId      String
+  terminalId     String?
+  receiptNo      String?
+  notes          String?
+  metadata       Json?
+  isOffline      Boolean   @default(false)
+  syncedAt       DateTime?
+  tenantId       String
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  tenant   Tenant               @relation(fields: [tenantId], references: [id])
+  customer PosCustomer?         @relation(fields: [customerId], references: [id])
+  cashier  User                 @relation(fields: [cashierId], references: [id])
+  items    PosTransactionItem[]
+  payments PosPayment[]
+
+  @@index([tenantId])
+  @@index([transactionNo])
+  @@index([customerId])
+  @@index([cashierId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("pos_transactions")
+}
+
+model PosTransactionItem {
+  id             String   @id @default(uuid())
+  transactionId  String
+  productId      String
+  sku            String
+  name           String
+  quantity       Decimal  @db.Decimal(10, 3)
+  unitPrice      Decimal  @db.Decimal(10, 2)
+  totalPrice     Decimal  @db.Decimal(12, 2)
+  discountAmount Decimal  @default(0) @db.Decimal(10, 2)
+  taxAmount      Decimal  @default(0) @db.Decimal(10, 2)
+  notes          String?
+  metadata       Json?
+  tenantId       String
+  createdAt      DateTime @default(now())
+
+  tenant      Tenant         @relation(fields: [tenantId], references: [id])
+  transaction PosTransaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  product     PosProduct     @relation(fields: [productId], references: [id])
+
+  @@index([tenantId])
+  @@index([transactionId])
+  @@index([productId])
+  @@map("pos_transaction_items")
+}
+
+model PosPayment {
+  id            String    @id @default(uuid())
+  transactionId String
+  method        String // CASH, CARD, DIGITAL_WALLET, BANK_TRANSFER, CHECK, GIFT_CARD
+  amount        Decimal   @db.Decimal(12, 2)
+  reference     String? // Card last 4 digits, check number, etc.
+  status        String    @default("PENDING") // PENDING, APPROVED, DECLINED, CANCELLED
+  processedAt   DateTime?
+  metadata      Json? // Card type, approval code, etc.
+  tenantId      String
+  createdAt     DateTime  @default(now())
+
+  tenant      Tenant         @relation(fields: [tenantId], references: [id])
+  transaction PosTransaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([transactionId])
+  @@index([method])
+  @@index([status])
+  @@map("pos_payments")
+}
+
+model PosInventoryMovement {
+  id        String   @id @default(uuid())
+  productId String
+  type      String // IN, OUT, ADJUSTMENT, TRANSFER
+  quantity  Decimal  @db.Decimal(10, 3)
+  reason    String? // SALE, PURCHASE, ADJUSTMENT, DAMAGE, THEFT, etc.
+  reference String? // Transaction ID, PO number, etc.
+  notes     String?
+  userId    String
+  tenantId  String
+  createdAt DateTime @default(now())
+
+  tenant  Tenant     @relation(fields: [tenantId], references: [id])
+  product PosProduct @relation(fields: [productId], references: [id])
+  user    User       @relation(fields: [userId], references: [id])
+
+  @@index([tenantId])
+  @@index([productId])
+  @@index([type])
+  @@index([createdAt])
+  @@map("pos_inventory_movements")
+}
+
+model PosTerminal {
+  id         String    @id @default(uuid())
+  name       String
+  code       String    @unique
+  location   String?
+  ipAddress  String?
+  macAddress String?
+  isActive   Boolean   @default(true)
+  isOnline   Boolean   @default(false)
+  lastPing   DateTime?
+  settings   Json? // Receipt printer, cash drawer, etc.
+  tenantId   String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+
+  @@index([tenantId])
+  @@index([code])
+  @@index([isActive])
+  @@map("pos_terminals")
+}
+
+model PosShift {
+  id               String    @id @default(uuid())
+  shiftNo          String    @unique
+  cashierId        String
+  terminalId       String?
+  startTime        DateTime
+  endTime          DateTime?
+  status           String    @default("OPEN") // OPEN, CLOSED
+  openingCash      Decimal   @default(0) @db.Decimal(10, 2)
+  closingCash      Decimal?  @db.Decimal(10, 2)
+  expectedCash     Decimal?  @db.Decimal(10, 2)
+  variance         Decimal?  @db.Decimal(10, 2)
+  totalSales       Decimal   @default(0) @db.Decimal(12, 2)
+  totalRefunds     Decimal   @default(0) @db.Decimal(12, 2)
+  transactionCount Int       @default(0)
+  notes            String?
+  tenantId         String
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  tenant  Tenant @relation(fields: [tenantId], references: [id])
+  cashier User   @relation(fields: [cashierId], references: [id])
+
+  @@index([tenantId])
+  @@index([cashierId])
+  @@index([status])
+  @@index([startTime])
+  @@map("pos_shifts")
+}
+
+model File {
+  id                  String    @id @default(uuid())
+  key                 String // File path/key in storage
+  bucket              String // Storage bucket/container name
+  provider            String // Storage provider (aws-s3, azure-blob, gcp-storage, minio, local)
+  url                 String // File access URL
+  visibility          String    @default("private") // public, private, tenant-only
+  size                BigInt // File size in bytes
+  mimeType            String // MIME type
+  checksum            String // File checksum (SHA256)
+  version             String    @default("1") // File version
+  expiresAt           DateTime? // File expiration timestamp
+  metadata            Json? // File metadata (originalName, description, tags, custom)
+  tenantId            String // Tenant ID for multi-tenant isolation
+  userId              String // User who uploaded the file
+  encrypted           Boolean   @default(true) // Whether file is encrypted
+  encryptionAlgorithm String? // Encryption algorithm used
+  contentEncoding     String? // Content encoding (gzip, etc.)
+  cacheControl        String? // Cache control header
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  deletedAt           DateTime? // Soft delete timestamp
+
+  tenant       Tenant            @relation(fields: [tenantId], references: [id])
+  user         User              @relation(fields: [userId], references: [id])
+  shares       FileShare[]
+  downloadLogs FileDownloadLog[]
+
+  @@index([tenantId])
+  @@index([userId])
+  @@index([provider])
+  @@index([bucket])
+  @@index([mimeType])
+  @@index([visibility])
+  @@index([checksum])
+  @@index([createdAt])
+  @@index([deletedAt])
+  @@map("files")
+}
+
+model NotificationTemplate {
+  id        String   @id @default(uuid())
+  tenantId  String
+  name      String
+  type      String // EMAIL, SMS, PUSH, IN_APP, WEBHOOK, SLACK, TEAMS
+  subject   String?
+  body      String
+  variables Json // Array of variable names
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tenant        Tenant         @relation(fields: [tenantId], references: [id])
+  notifications Notification[]
+
+  @@index([tenantId])
+  @@index([type])
+  @@index([isActive])
+  @@map("notification_templates")
+}
+
+model UserNotification {
+  id             String    @id @default(uuid())
+  userId         String
+  notificationId String
+  title          String
+  message        String
+  isRead         Boolean   @default(false)
+  readAt         DateTime?
+  createdAt      DateTime  @default(now())
+
+  user         User         @relation(fields: [userId], references: [id])
+  notification Notification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([notificationId])
+  @@index([isRead])
+  @@index([createdAt])
+  @@map("user_notifications")
+}
+
+model RemoteDesktopSession {
+  id             String   @id @default(uuid())
+  tenantId       String
+  userId         String
+  vdiInstanceId  String?
+  type           String // rdp, vnc, ssh, web
+  status         String   @default("connecting") // connecting, connected, disconnected, error
+  connectionInfo Json // host, port, protocol, credentials
+  settings       Json // resolution, colorDepth, multiMonitor, etc.
+  metrics        Json // startTime, endTime, duration, bytesTransferred, latency, quality
+  security       Json // encrypted, vpnRequired, mfaRequired, ipWhitelist, sessionTimeout
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  tenant      Tenant       @relation(fields: [tenantId], references: [id])
+  user        User         @relation(fields: [userId], references: [id])
+  vdiInstance VdiInstance? @relation(fields: [vdiInstanceId], references: [id])
+
+  @@index([tenantId])
+  @@index([userId])
+  @@index([status])
+  @@index([type])
+  @@index([createdAt])
+  @@map("remote_desktop_sessions")
+}
+
+model VdiInstance {
+  id          String   @id @default(uuid())
+  tenantId    String
+  createdBy   String
+  name        String
+  type        String // windows, linux, macos
+  template    String
+  resources   Json // cpu, memory, storage, gpu
+  network     Json // ip, ports, vpnEnabled
+  status      String   @default("creating") // creating, running, stopped, error, maintenance
+  containerId String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  tenant   Tenant                 @relation(fields: [tenantId], references: [id])
+  creator  User                   @relation(fields: [createdBy], references: [id])
+  sessions RemoteDesktopSession[]
+
+  @@index([tenantId])
+  @@index([createdBy])
+  @@index([status])
+  @@index([type])
+  @@index([createdAt])
+  @@map("vdi_instances")
+}
+
+model FileShare {
+  id            String    @id @default(uuid())
+  fileId        String
+  tenantId      String
+  shareToken    String    @unique
+  expiresAt     DateTime?
+  password      String?
+  allowDownload Boolean   @default(true)
+  allowPreview  Boolean   @default(true)
+  maxDownloads  Int?
+  downloadCount Int       @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  file   File   @relation(fields: [fileId], references: [id])
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+
+  @@index([shareToken])
+  @@index([fileId])
+  @@index([tenantId])
+  @@index([expiresAt])
+  @@map("file_shares")
+}
+
+model FileDownloadLog {
+  id           String   @id @default(uuid())
+  fileId       String
+  userId       String
+  ipAddress    String?
+  userAgent    String?
+  downloadedAt DateTime @default(now())
+
+  file File @relation(fields: [fileId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([fileId])
+  @@index([userId])
+  @@index([downloadedAt])
+  @@map("file_download_logs")
+}
+
+// Compliance Models
+model KycProfile {
+  id                 String    @id @default(uuid())
+  customerId         String    @unique
+  tenantId           String
+  customerType       String    @default("individual") // individual, business, trust, etc.
+  status             String    @default("pending") // pending, approved, rejected, expired
+  riskLevel          String    @default("medium") // low, medium, high
+  verificationLevel  String    @default("basic") // basic, enhanced, premium
+  complianceScore    Float? // overall compliance score
+  jurisdiction       String? // regulatory jurisdiction
+  personalInfo       Json? // name, address, phone, email, etc.
+  documents          Json? // passport, license, utility bills, etc.
+  verifiedAt         DateTime?
+  expiresAt          DateTime?
+  reviewDue          Boolean   @default(false)
+  requiredDocuments  Int       @default(0)
+  submittedDocuments Int       @default(0)
+  completedChecks    Int       @default(0)
+  totalChecks        Int       @default(0)
+  lastReviewDate     DateTime?
+  nextReviewDate     DateTime?
+  notes              String?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  @@index([customerId])
+  @@index([tenantId])
+  @@index([status])
+  @@index([riskLevel])
+  @@index([verificationLevel])
+  @@index([customerType])
+  @@map("kyc_profiles")
+}
+
+model KycCheck {
+  id          String    @id @default(uuid())
+  profileId   String
+  tenantId    String
+  type        String    @default("identity") // identity, address, sanctions, pep, adverse_media
+  checkType   String? // alias for type field for compatibility
+  status      String    @default("pending") // pending, passed, failed, manual_review
+  provider    String    @default("internal") // jumio, onfido, trulioo, etc.
+  reference   String? // external provider reference
+  score       Float?
+  details     Json // check-specific details
+  performedBy String?
+  expiresAt   DateTime?
+  createdAt   DateTime  @default(now())
+  performedAt DateTime  @default(now())
+  completedAt DateTime?
+
+  @@index([profileId])
+  @@index([tenantId])
+  @@index([type])
+  @@index([status])
+  @@index([provider])
+  @@index([createdAt])
+  @@index([performedAt])
+  @@map("kyc_checks")
+}
+
+model AmlAlert {
+  id          String    @id @default(uuid())
+  tenantId    String
+  userId      String?
+  customerId  String?
+  type        String    @default("transaction") // transaction, behavior, sanctions, pep
+  severity    String    @default("medium") // low, medium, high, critical
+  status      String    @default("open") // open, investigating, resolved, false_positive
+  description String
+  details     Json      @default("{}") // alert-specific details
+  assignedTo  String?
+  resolvedAt  DateTime?
+  resolution  String?
+  notes       String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([tenantId])
+  @@index([userId])
+  @@index([customerId])
+  @@index([type])
+  @@index([severity])
+  @@index([status])
+  @@index([assignedTo])
+  @@index([createdAt])
+  @@map("aml_alerts")
+}
+
+model ComplianceDocument {
+  id           String    @id @default(uuid())
+  tenantId     String
+  userId       String?
+  customerId   String? // customer this document belongs to
+  type         String    @default("document") // policy, procedure, report, certificate
+  documentType String? // specific document type for compliance checks
+  title        String    @default("Untitled Document")
+  description  String?
+  content      String? // document content or file path
+  filename     String? // original filename
+  fileSize     Int? // file size in bytes
+  mimeType     String? // MIME type
+  version      String    @default("1.0")
+  status       String    @default("draft") // draft, approved, archived, pending, under_review, verified, rejected, expired
+  approvedBy   String?
+  approvedAt   DateTime?
+  verifiedBy   String? // user who verified the document
+  verifiedAt   DateTime? // when the document was verified
+  expiresAt    DateTime?
+  tags         String[] // for categorization
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([tenantId])
+  @@index([userId])
+  @@index([customerId])
+  @@index([type])
+  @@index([documentType])
+  @@index([status])
+  @@index([approvedBy])
+  @@index([verifiedBy])
+  @@index([expiresAt])
+  @@map("compliance_documents")
+}
+
+model RegulatoryReport {
+  id           String    @id @default(uuid())
+  tenantId     String
+  reportType   String // sar, ctr, fbar, etc.
+  reportPeriod String // reporting period
+  status       String    @default("draft") // draft, submitted, accepted, rejected
+  reportData   Json // report data
+  generatedBy  String // user who generated the report
+  submittedAt  DateTime?
+  submittedBy  String?
+  submittedTo  String?
+  reference    String? // regulatory reference number
+  notes        String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  submitter User? @relation(fields: [submittedBy], references: [id])
+
+  @@index([tenantId])
+  @@index([reportType])
+  @@index([status])
+  @@index([reportPeriod])
+  @@index([submittedAt])
+  @@index([submittedTo])
+  @@map("regulatory_reports")
+}
+
+// Fraud Detection Models
+model FraudAlert {
+  id            String    @id @default(uuid())
+  tenantId      String
+  userId        String?
+  customerId    String?
+  accountId     String?
+  transactionId String?
+  type          String // transaction, login, device, behavior
+  severity      String    @default("medium") // low, medium, high, critical
+  status        String    @default("open") // open, investigating, resolved, false_positive
+  description   String
+  details       Json      @default("{}") // alert-specific details
+  score         Float? // legacy fraud score field
+  riskLevel     String    @default("medium") // normalized risk level
+  riskScore     Float? // normalized risk score (0-100)
+  reasons       String[]  @default([])
+  assignedTo    String?
+  reviewedBy    String?
+  reviewNotes   String?
+  reviewedAt    DateTime?
+  resolvedAt    DateTime?
+  notes         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  tenant       Tenant @relation(fields: [tenantId], references: [id])
+  user         User?  @relation(fields: [userId], references: [id])
+  assignedUser User?  @relation("FraudAlertAssignee", fields: [assignedTo], references: [id])
+
+  @@index([tenantId])
+  @@index([userId])
+  @@index([customerId])
+  @@index([accountId])
+  @@index([transactionId])
+  @@index([type])
+  @@index([severity])
+  @@index([riskLevel])
+  @@index([status])
+  @@index([assignedTo])
+  @@index([createdAt])
+  @@map("fraud_alerts")
+}
+
+model FraudRule {
+  id          String   @id @default(uuid())
+  tenantId    String
+  name        String
+  description String?
+  type        String // velocity, amount, location, device, behavior
+  conditions  Json // rule conditions
+  actions     Json // actions to take when triggered
+  isActive    Boolean  @default(true)
+  priority    Int      @default(1)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+
+  @@index([tenantId])
+  @@index([type])
+  @@index([isActive])
+  @@index([priority])
+  @@map("fraud_rules")
+}
+
+model TrustedDevice {
+  id                String   @id @default(uuid())
+  userId            String?
+  tenantId          String
+  customerId        String?
+  deviceId          String? // legacy unique device identifier
+  deviceFingerprint String? // normalized fingerprint hash
+  deviceInfo        Json?
+  name              String? // user-friendly name
+  fingerprint       Json? // legacy device fingerprint data
+  ipAddress         String?
+  userAgent         String?
+  location          Json? // geolocation data
+  isActive          Boolean  @default(true)
+  registeredAt      DateTime @default(now())
+  lastUsedAt        DateTime @default(now())
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  user   User?  @relation(fields: [userId], references: [id])
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+
+  @@unique([userId, deviceId])
+  @@index([userId])
+  @@index([tenantId])
+  @@index([customerId])
+  @@index([deviceId])
+  @@index([deviceFingerprint])
+  @@index([isActive])
+  @@map("trusted_devices")
+}
+
+// Tokenization Models
+model BlockchainToken {
+  id              String   @id @default(uuid())
+  tenantId        String
+  createdBy       String
+  name            String
+  symbol          String
+  totalSupply     String
+  decimals        Int
+  description     String?
+  logoUrl         String?
+  website         String?
+  whitepaper      String?
+  tokenType       String
+  blockchain      String
+  features        Json?
+  distribution    Json?
+  vestingSchedule Json?
+  status          String   @default("PENDING")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  transactions     BlockchainTransaction[]
+  stakingPools     TokenStakingPool[]
+  vestingSchedules TokenVestingSchedule[]
+  stakingPositions TokenStakingPosition[]
+
+  @@index([tenantId])
+  @@index([symbol, blockchain])
+  @@map("blockchain_tokens")
+}
+
+model TokenStakingPool {
+  id          String   @id @default(uuid())
+  tokenId     String
+  name        String
+  description String?
+  apy         Float?
+  lockPeriod  Int?
+  totalStaked String?
+  rewardToken String?
+  status      String   @default("ACTIVE")
+  settings    Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  token     BlockchainToken        @relation(fields: [tokenId], references: [id])
+  positions TokenStakingPosition[]
+
+  @@index([tokenId])
+  @@map("token_staking_pools")
+}
+
+model TokenStakingPosition {
+  id             String   @id @default(uuid())
+  tenantId       String
+  userId         String
+  poolId         String
+  tokenId        String
+  amount         String
+  startDate      DateTime @default(now())
+  durationDays   Int
+  status         String   @default("ACTIVE")
+  rewardsAccrued String?  @default("0")
+  metadata       Json?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  pool  TokenStakingPool @relation(fields: [poolId], references: [id])
+  token BlockchainToken  @relation(fields: [tokenId], references: [id])
+
+  @@index([tenantId])
+  @@index([userId])
+  @@index([poolId])
+  @@index([tokenId])
+  @@map("token_staking_positions")
+}
+
+model TokenizationDashboardSnapshot {
+  id                String   @id @default(uuid())
+  tenantId          String
+  userId            String?
+  portfolioTotal    Decimal  @default(0)
+  tokensValue       Decimal  @default(0)
+  nftValue          Decimal  @default(0)
+  stakingValue      Decimal  @default(0)
+  defiValue         Decimal  @default(0)
+  averageStakingApy Float?
+  averageDefiApy    Float?
+  blendedYieldApy   Float?
+  alertsCount       Int      @default(0)
+  performance       Json?
+  snapshot          Json
+  createdAt         DateTime @default(now())
+  tenants           Tenant   @relation(fields: [tenantId], references: [id])
+  users             User?    @relation(fields: [userId], references: [id])
+
+  @@index([tenantId, createdAt])
+  @@map("tokenization_dashboard_snapshots")
+}
+
+model TokenVestingSchedule {
+  id              String   @id @default(uuid())
+  tokenId         String
+  beneficiary     String
+  cliffMonths     Int?
+  durationMonths  Int?
+  tgePercentage   Float?
+  allocatedAmount String?
+  releasedAmount  String?
+  schedule        Json?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  token BlockchainToken @relation(fields: [tokenId], references: [id])
+
+  @@index([tokenId])
+  @@map("token_vesting_schedules")
+}
+
+model BlockchainTransaction {
+  id          String   @id @default(uuid())
+  tenantId    String
+  userId      String
+  tokenId     String?
+  nftId       String?
+  type        String
+  status      String   @default("PENDING")
+  blockchain  String
+  hash        String?
+  amount      String?
+  fee         String?
+  fromAddress String?
+  toAddress   String?
+  metadata    Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  token BlockchainToken? @relation(fields: [tokenId], references: [id])
+  nft   Nft?             @relation(fields: [nftId], references: [id])
+
+  @@index([tenantId])
+  @@index([userId])
+  @@index([tokenId])
+  @@index([nftId])
+  @@index([hash])
+  @@map("blockchain_transactions")
+}
+
+model TokenizationAlert {
+  id        String   @id @default(uuid())
+  tenantId  String
+  userId    String
+  type      String
+  title     String?
+  message   String
+  metadata  Json?
+  read      Boolean  @default(false)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@index([tenantId])
+  @@index([userId])
+  @@index([type])
+  @@map("tokenization_alerts")
+}
+
+// Missing models required for schema validation
+model EmailMailbox {
+  id        String   @id @default(uuid())
+  tenantId  String
+  userId    String
+  name      String
+  email     String
+  provider  String   @default("IMAP")
+  host      String?
+  port      Int?
+  username  String?
+  password  String?
+  isDefault Boolean  @default(false)
+  isActive  Boolean  @default(true)
+  settings  Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+  emails Email[]
+
+  @@index([tenantId])
+  @@index([userId])
+  @@index([email])
+  @@map("email_mailboxes")
+}
+
+model Email {
+  id             String    @id @default(uuid())
+  tenantId       String
+  mailboxId      String?
+  userId         String?
+  folderId       String?
+  messageId      String?
+  threadId       String?
+  subject        String?
+  body           String?
+  htmlBody       String?
+  fromEmail      String
+  fromName       String?
+  fromAddress    String
+  toEmails       String[]
+  ccEmails       String[]
+  bccEmails      String[]
+  replyTo        String?
+  priority       String    @default("normal")
+  tags           String[]  @default([])
+  isRead         Boolean   @default(false)
+  isStarred      Boolean   @default(false)
+  isArchived     Boolean   @default(false)
+  isSpam         Boolean   @default(false)
+  isDeleted      Boolean   @default(false)
+  sentAt         DateTime?
+  receivedAt     DateTime?
+  metadata       Json?
+  analytics      Json?
+  securityReport Json?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  tenant      Tenant            @relation(fields: [tenantId], references: [id])
+  mailbox     EmailMailbox?     @relation(fields: [mailboxId], references: [id])
+  user        User?             @relation(fields: [userId], references: [id])
+  folder      EmailFolder?      @relation(fields: [folderId], references: [id])
+  attachments EmailAttachment[]
+
+  @@index([tenantId])
+  @@index([userId])
+  @@index([folderId])
+  @@index([mailboxId])
+  @@index([messageId])
+  @@index([fromEmail])
+  @@index([isRead])
+  @@map("emails")
+}
+
+model SpamRule {
+  id          String   @id @default(uuid())
+  tenantId    String
+  userId      String
+  name        String
+  description String?
+  pattern     String
+  type        String
+  action      String   @default("quarantine")
+  isRegex     Boolean  @default(false)
+  createdBy   String
+  isActive    Boolean  @default(true)
+  priority    Int      @default(100)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@index([tenantId])
+  @@index([userId])
+  @@index([isActive])
+  @@map("spam_rules")
+}
+
+model EmailSecurityLog {
+  id          String   @id @default(uuid())
+  tenantId    String
+  emailId     String?
+  eventType   String
+  type        String?
+  action      String?
+  description String
+  details     Json?
+  reason      String?
+  ipAddress   String?
+  userAgent   String?
+  severity    String   @default("info")
+  metadata    Json?
+  createdAt   DateTime @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+
+  @@index([tenantId])
+  @@index([eventType])
+  @@index([type])
+  @@index([action])
+  @@index([severity])
+  @@map("email_security_logs")
+}
+
+model QuarantinedFile {
+  id             String    @id @default(uuid())
+  tenantId       String
+  filename       String
+  originalPath   String?
+  quarantinePath String
+  reason         String
+  status         String    @default("quarantined")
+  quarantinedBy  String?
+  fileHash       String?
+  fileSize       BigInt?
+  mimeType       String?
+  isRestored     Boolean   @default(false)
+  createdAt      DateTime  @default(now())
+  restoredAt     DateTime?
+
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+
+  @@index([tenantId])
+  @@index([fileHash])
+  @@index([status])
+  @@index([isRestored])
+  @@map("quarantined_files")
+}
+
+model FraudStatistics {
+  id                     String   @id @default(uuid())
+  tenantId               String
+  date                   DateTime
+  totalTransactions      Int      @default(0)
+  fraudulentTransactions Int      @default(0)
+  falsePositives         Int      @default(0)
+  truePositives          Int      @default(0)
+  riskScore              Float?
+  metadata               Json?
+  createdAt              DateTime @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+
+  @@index([tenantId])
+  @@index([date])
+  @@map("fraud_statistics")
+}
+
+model SenderReputation {
+  id          String    @id @default(uuid())
+  tenantId    String
+  email       String
+  domain      String?
+  reputation  Float     @default(0.0)
+  score       Float     @default(0.0)
+  spamCount   Int       @default(0)
+  totalEmails Int       @default(0)
+  spamEmails  Int       @default(0)
+  validCount  Int       @default(0)
+  lastSeen    DateTime?
+  isBlocked   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+
+  @@unique([tenantId, email])
+  @@index([tenantId])
+  @@index([email])
+  @@index([domain])
+  @@index([reputation])
+  @@map("sender_reputations")
+}
+
+model Nft {
+  id              String   @id @default(uuid())
+  tenantId        String
+  userId          String?
+  collectionId    String?
+  tokenId         String?
+  transactionHash String?
+  contractAddress String
+  name            String
+  description     String?
+  image           String?
+  metadata        Json?
+  attributes      Json?
+  blockchain      String   @default("ethereum")
+  standard        String   @default("ERC-721")
+  owner           String?
+  creator         String?
+  price           Decimal?
+  currency        String?
+  royalty         Decimal? @default(0)
+  status          String   @default("draft")
+  type            String?
+  isListed        Boolean  @default(false)
+  isVerified      Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  tenant                 Tenant                  @relation(fields: [tenantId], references: [id])
+  collection             NftCollection?          @relation(fields: [collectionId], references: [id])
+  listings               NftListing[]
+  offers                 NftOffer[]
+  transfers              NftTransfer[]
+  blockchainTransactions BlockchainTransaction[]
+
+  @@index([tenantId])
+  @@index([contractAddress])
+  @@index([tokenId])
+  @@index([owner])
+  @@index([status])
+  @@index([type])
+  @@map("nfts")
+}
+
+model NftCollection {
+  id              String   @id @default(uuid())
+  tenantId        String
+  name            String
+  description     String?
+  symbol          String?
+  image           String?
+  banner          String?
+  website         String?
+  discord         String?
+  twitter         String?
+  blockchain      String   @default("ethereum")
+  maxSupply       Int?
+  contractAddress String?
+  royalty         Decimal? @default(0)
+  createdBy       String?
+  metadata        Json?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+  nfts   Nft[]
+
+  @@index([tenantId])
+  @@map("nft_collections")
+}
+
+model NftListing {
+  id           String    @id @default(uuid())
+  tenantId     String
+  nftId        String
+  seller       String
+  price        Decimal
+  currency     String    @default("ETH")
+  status       String    @default("active")
+  startTime    DateTime  @default(now())
+  endTime      DateTime?
+  reservePrice Decimal?
+  isAuction    Boolean   @default(false)
+  isActive     Boolean   @default(true)
+  expiresAt    DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+  nft    Nft    @relation(fields: [nftId], references: [id])
+
+  @@index([tenantId])
+  @@index([nftId])
+  @@index([status])
+  @@index([isActive])
+  @@map("nft_listings")
+}
+
+model NftOffer {
+  id        String    @id @default(uuid())
+  tenantId  String
+  nftId     String
+  buyer     String
+  price     Decimal
+  currency  String    @default("ETH")
+  status    String    @default("pending")
+  expiresAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+  nft    Nft    @relation(fields: [nftId], references: [id])
+
+  @@index([tenantId])
+  @@index([nftId])
+  @@index([status])
+  @@map("nft_offers")
+}
+
+model NftTransfer {
+  id        String   @id @default(uuid())
+  tenantId  String
+  nftId     String
+  from      String
+  to        String
+  fromAddr  String
+  toAddr    String
+  txHash    String?
+  createdAt DateTime @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+  nft    Nft    @relation(fields: [nftId], references: [id])
+
+  @@index([tenantId])
+  @@index([nftId])
+  @@map("nft_transfers")
+}
+
+model NftSale {
+  id              String   @id @default(uuid())
+  tenantId        String
+  nftId           String
+  buyer           String
+  seller          String?
+  price           Decimal
+  currency        String   @default("ETH")
+  txHash          String?
+  transactionHash String?
+  createdAt       DateTime @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+
+  @@index([tenantId])
+  @@index([nftId])
+  @@map("nft_sales")
+}
+
+model SmartContract {
+  id              String   @id @default(uuid())
+  tenantId        String
+  address         String
+  name            String
+  abi             Json
+  bytecode        String?
+  network         String   @default("ethereum")
+  networkId       String?
+  templateId      String?
+  createdBy       String?
+  constructorArgs Json?
+  transactionHash String?
+  isDeployed      Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+
+  @@index([tenantId])
+  @@index([address])
+  @@index([network])
+  @@map("smart_contracts")
+}
+
+model LandingPageContent {
+  id           String   @id @default(uuid())
+  tenantId     String
+  version      String   @default("1")
+  published    Boolean  @default(false)
+  publishedAt  DateTime?
+  publishedBy  String?
+  hero         Json     // Hero section content
+  footer       Json     // Footer content
+  seo          Json     // SEO meta data
+  createdBy    String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  tenant       Tenant                    @relation(fields: [tenantId], references: [id])
+  features     LandingPageFeature[]
+  modules      LandingPageModule[]
+  stats        LandingPageStat[]
+  testimonials LandingPageTestimonial[]
+  pricing      LandingPagePricing[]
+
+  @@index([tenantId])
+  @@index([published])
+  @@index([version])
+  @@map("landing_page_content")
+}
+
+model LandingPageFeature {
+  id          String   @id @default(uuid())
+  contentId   String
+  icon        String
+  title       String
+  description String   @db.Text
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  content LandingPageContent @relation(fields: [contentId], references: [id], onDelete: Cascade)
+
+  @@index([contentId])
+  @@index([order])
+  @@map("landing_page_features")
+}
+
+model LandingPageModule {
+  id          String   @id @default(uuid())
+  contentId   String
+  name        String
+  description String   @db.Text
+  features    Json     // Array of feature strings
+  icon        String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  content LandingPageContent @relation(fields: [contentId], references: [id], onDelete: Cascade)
+
+  @@index([contentId])
+  @@index([order])
+  @@map("landing_page_modules")
+}
+
+model LandingPageStat {
+  id        String   @id @default(uuid())
+  contentId String
+  label     String
+  value     String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  content LandingPageContent @relation(fields: [contentId], references: [id], onDelete: Cascade)
+
+  @@index([contentId])
+  @@index([order])
+  @@map("landing_page_stats")
+}
+
+model LandingPageTestimonial {
+  id          String   @id @default(uuid())
+  contentId   String
+  company     String
+  quote       String   @db.Text
+  author      String
+  position    String
+  avatar      String?
+  companyLogo String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  content LandingPageContent @relation(fields: [contentId], references: [id], onDelete: Cascade)
+
+  @@index([contentId])
+  @@index([order])
+  @@map("landing_page_testimonials")
+}
+
+model LandingPagePricing {
+  id           String   @id @default(uuid())
+  contentId    String
+  name         String
+  price        String
+  description  String   @db.Text
+  features     Json     // Array of feature strings
+  highlighted  Boolean  @default(false)
+  currency     String   @default("USD")
+  billingCycle String   @default("monthly")
+  order        Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  content LandingPageContent @relation(fields: [contentId], references: [id], onDelete: Cascade)
+
+  @@index([contentId])
+  @@index([order])
+  @@map("landing_page_pricing")
+}
+
+model WebsiteAnalytics {
+  id         String   @id @default(uuid())
+  tenantId   String
+  page       String
+  event      String   // 'page_view', 'conversion', 'click', etc.
+  data       Json?    // Additional event data
+  userAgent  String?
+  referrer   String?
+  ip         String?
+  timestamp  DateTime @default(now())
+  sessionId  String?
+  userId     String?
+
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+
+  @@index([tenantId])
+  @@index([page])
+  @@index([event])
+  @@index([timestamp])
+  @@map("website_analytics")
+}
